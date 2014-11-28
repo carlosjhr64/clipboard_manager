@@ -12,7 +12,7 @@ module ClipboardManager
   end
 
 class ClipboardManager
-  IS_PWD = Regexp.new(CONFIG[:IsPwd])
+  IS_PWD = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
   CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
 

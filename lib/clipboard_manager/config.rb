@@ -8,18 +8,17 @@ Options:
 
   APPDIR = File.dirname File.dirname __dir__
 
-  # pwd contains digit, lower case, upper case, special, and does not start like http://.
   IS_PWD =
-    /\A
-      (?!\w+:\/\/)          # not like url
-      (?!\/[a-z]+\/[a-z])   # not like linux path
-      (?![a-z]+\/[a-z]+\/)  # not like relative path
-      (?=.*\d)              # at least on diget
-      (?=.*[a-z])           # at least one lower case letter
-      (?=.*[A-Z])           # at least one upper case letter
-      (?=.*[^\w\s])         # at least one special character
-      .{4,43}$              # 4 to 43 in length
-    \Z/x
+'\A
+  (?!\w+:\/\/)          # not like url
+  (?!\/[a-z]+\/[a-z])   # not like linux path
+  (?![a-z]+\/[a-z]+\/)  # not like relative path
+  (?=.*\d)              # at least on diget
+  (?=.*[a-z])           # at least one lower case letter
+  (?=.*[A-Z])           # at least one upper case letter
+  (?=.*[^\w\s])         # at least one special character
+  .{4,43}$              # 4 to 43 in length
+\Z'
 
   CONFIG = {
     Help: HELP,
