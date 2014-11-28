@@ -30,7 +30,6 @@ class ClipboardManager
     @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
     @is_cmd  = Regexp.new(CONFIG[:IsCmd], Regexp::EXTENDED)
 
-    @active     = true
 
     program.mini_menu.append_menu_item(:toggle!){toggle}
     status(@ready)
@@ -44,14 +43,24 @@ class ClipboardManager
     vbox = Such::Box.new window, :vbox!
     @ask = Such::CheckButton.new vbox, :ask!
     @ask.active = ::ClipboardManager.options[:ask, true]
+    @running = Such::CheckButton.new(vbox, :running!, 'toggled'){toggled}
+    @running.active = ::ClipboardManager.options[:running, true]
+
+    Such::Label.new vbox, :tasks!
+    @checks = {}
+    CONFIG[:tasks].keys.each{|key| @checks = Such::CheckButton.new(vbox, [key.to_s], {set_active: true})}
+
     window.show_all
+  end
+
+  def toggled
+    @running.active? ? status(@ready) : status(@off)
   end
 
   def toggle
     request_text do |text|
       @previous = text
-      @active = !@active
-      @active? status(@ready) : status(@off)
+      @running.active = !@running.active?
     end
   end
 
@@ -69,7 +78,7 @@ class ClipboardManager
 
   def cycle
     while true
-      step if @active
+      step if @running.active?
       sleep CONFIG[:Sleep]
     end
   end
@@ -90,6 +99,7 @@ class ClipboardManager
 
   def manage(text)
     CONFIG[:tasks].each do |name, _|
+      next unless @checks[name].active?
       rgx, mth, str = _
       rgx = Regexp.new(rgx, Regexp::EXTENDED)
       if md=rgx.match(text) and question?(name)

@@ -3,7 +3,10 @@ module ClipboardManager
   help = <<-HELP # TODO
 Usage: gtk3app clipboardmanager [options]
 Options:
-  --ask  Ask for confirmation on any action.
+  --ask      Ask for confirmation.
+  --running  Start in active mode.
+Default for options is true,
+use no-ask and no-running for false.
   HELP
 
   APPDIR = File.dirname File.dirname __dir__
@@ -55,15 +58,21 @@ Options:
 
       window: {
         set_title: "Clipboard Manager",
-        set_default_size: [200,100],
         set_window_position: :center,
       },
 
       VBOX: [:vertical],
       vbox!: [:VBOX],
 
-      ASK: ['Ask for confimation.'],
+      ASK: ['Ask for confirmation.'],
       ask!: [:ASK],
+
+      RUNNING: ['On/Off.'],
+      running!: [:RUNNING],
+
+      TASKS: ['Tasks:'],
+      tasks: {},
+      tasks!: [:TASKS, :tasks],
     },
 
     # Note that Ruby 2 hashes preserves order, and order here is important.
