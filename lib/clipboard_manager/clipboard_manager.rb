@@ -1,4 +1,5 @@
 module ClipboardManager
+  using Rafini::Exception
 
   def self.options=(opts)
     @@options=opts
@@ -12,7 +13,6 @@ module ClipboardManager
   end
 
 class ClipboardManager
-  IS_PWD = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
   CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
 
@@ -27,6 +27,9 @@ class ClipboardManager
     @ready   = Gdk::Pixbuf.new(file: CONFIG[:Ready])
     @off     = Gdk::Pixbuf.new(file: CONFIG[:Off])
 
+    @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
+    @is_cmd  = Regexp.new(CONFIG[:IsCmd], Regexp::EXTENDED)
+
     @active     = true
 
     program.mini_menu.append_menu_item(:toggle!){toggle}
@@ -40,7 +43,7 @@ class ClipboardManager
     window = program.window
     vbox = Such::Box.new window, :vbox!
     @ask = Such::CheckButton.new vbox, :ask!
-    @ask.active = (::ClipboardManager.options[:ask])? true : false
+    @ask.active = ::ClipboardManager.options[:ask, true]
     window.show_all
   end
 
@@ -55,7 +58,7 @@ class ClipboardManager
   def request_text
     CLIPBOARD.request_text do |_, text|
       # nil anything that looks like a pwd.
-      (IS_PWD=~text)? yield(nil) : yield(text)
+      (@is_pwd=~text)? yield(nil) : yield(text)
     end
   end
 
@@ -86,10 +89,28 @@ class ClipboardManager
   end
 
   def manage(text)
-    self.methods.select{|m|m=~/^task_/}.sort.each do |mth|
-      if self.method(mth).call(text)
-        status(@ok)
-        return 
+    CONFIG[:tasks].each do |name, _|
+      rgx, mth, str = _
+      rgx = Regexp.new(rgx, Regexp::EXTENDED)
+      if md=rgx.match(text) and question?(name)
+        CLIPBOARD.text=Rafini::Empty::STRING
+        begin
+          case mth
+          when :espeak
+            espeak(text)
+          when :firefox
+            firefox(text)
+          when :system
+            bashit(md, str)
+          else
+            raise "Method #{mth} not implemented."
+          end
+          status(@ok)
+        rescue RuntimeError
+          $!.puts
+          status(@nope) # TODO it's not just nope!
+        end
+        return
       end
     end
     status(@nope)
@@ -99,32 +120,23 @@ class ClipboardManager
     @ask.active? ? system("zenity --question --text='#{wut}'") : true
   end
 
-  def task_999_espeak(text)
-    if (text.length > 80) and question?('espeak?')
-      CLIPBOARD.text=Rafini::Empty::STRING
-      voices = ['en-gb', 'en-uk-north', 'en-uk-rp', 'en-uk-wmids', 'en-us']
-      IO.popen("espeak --stdin -v #{voices[rand(voices.length)]}", 'w'){|e|e.puts text.strip}
-      return true
-    end
-    return false
+  def espeak(text)
+    IO.popen('espeak --stdin', 'w'){|e|e.puts text.strip}
   end
 
-  def task_020_amazon(text)
-    if text=~/^https?:\/\/www.amazon.com\// and question?('amazon?')
-      CLIPBOARD.text=Rafini::Empty::STRING
-      system("firefox '#{text.strip}' &")
-      return true
-    end
-    return false
+  def firefox(text)
+    raise "not a url" unless text =~ /^https?:\/\/\S+$/
+    raise "quote not allowed in url" if text =~ /'/
+    system("firefox '#{text}' &")
   end
 
-  def task_010_mplay(text)
-    if text =~ /^https?:\/\/((vimeo.com)|(t.co)|((www\.)you((tube)|(porn))))/ and question?('mplay?')
-      CLIPBOARD.text=Rafini::Empty::STRING
-      system("mplay '#{text.strip}' &")
-      return true
+  def bashit(md, str)
+    (md.length-1).downto(0) do |i|
+      str = str.gsub(/\$#{i}/, md[i])
+      raise "Untrusted system command." unless @is_cmd =~ str
+      $stderr.puts str if $VERBOSE
+      system str
     end
-    return false
   end
 
 end

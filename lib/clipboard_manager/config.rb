@@ -1,6 +1,6 @@
 module ClipboardManager
 
-  HELP = <<-HELP # TODO
+  help = <<-HELP # TODO
 Usage: gtk3app clipboardmanager [options]
 Options:
   --ask  Ask for confirmation on any action.
@@ -8,7 +8,7 @@ Options:
 
   APPDIR = File.dirname File.dirname __dir__
 
-  IS_PWD =
+  is_pwd =
 '\A
   (?!\w+:\/\/)          # not like url
   (?!\/[a-z]+\/[a-z])   # not like linux path
@@ -20,13 +20,15 @@ Options:
   .{4,43}$              # 4 to 43 in length
 \Z'
 
+
   CONFIG = {
-    Help: HELP,
+    Help: help,
 
     TimeOut: 3,
     Sleep: 0.5,
 
-    IsPwd: IS_PWD,
+    IsPwd: is_pwd,
+    IsCmd: '\A\w+\s+\'[^\']+\'(\s+\&)?\Z',
 
     Working: "#{XDG['DATA']}/gtk3app/clipboardmanager/working.png",
     Ok:      "#{XDG['DATA']}/gtk3app/clipboardmanager/ok.png",
@@ -63,6 +65,13 @@ Options:
       ASK: ['Ask for confimation.'],
       ask!: [:ASK],
     },
+
+    # Note that Ruby 2 hashes preserves order, and order here is important.
+    tasks: {
+      mplay: ['https?:\/\/www\.youtube\.com\/\S+', :system, "mplay '$0' &"],
+      firefox: ['^https?\/\/www.amazon.com\/', :firefox],
+      espeak: ['.{80,}', :espeak],
+    }
   }
 
 end
