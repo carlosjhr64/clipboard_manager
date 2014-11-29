@@ -15,7 +15,6 @@ module ClipboardManager
 class ClipboardManager
   CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
-
   def initialize(program)
     @program = program
     @image = program.mini.children.first
@@ -41,16 +40,28 @@ class ClipboardManager
 
     window = program.window
     vbox = Such::Box.new window, :vbox!
+
     @ask = Such::CheckButton.new vbox, :ask!
     @ask.active = ::ClipboardManager.options[:ask, true]
+
     @running = Such::CheckButton.new(vbox, :running!, 'toggled'){toggled}
     @running.active = ::ClipboardManager.options[:running, true]
 
     Such::Label.new vbox, :tasks!
+
     @checks = {}
-    CONFIG[:tasks].keys.each{|key| @checks[key] = Such::CheckButton.new(vbox, [key.to_s], {set_active: true})}
+    CONFIG[:tasks].keys.each do |key|
+      @checks[key] = Such::CheckButton.new(vbox, [key.to_s.capitalize], {set_active: true})
+    end
+
+    @history = []
+    Such::Button.new(vbox, :history!){do_history}
 
     window.show_all
+  end
+
+  def do_history
+    puts @history
   end
 
   def toggled
@@ -97,7 +108,14 @@ class ClipboardManager
     end
   end
 
+  def add_history(text)
+    @history.unshift text
+    @history.uniq!
+    @history.pop if @history.length > CONFIG[:MaxHistory]
+  end
+
   def manage(text)
+    add_history text
     CONFIG[:tasks].each do |name, _|
       next unless @checks[name].active?
       rgx, mth, str = _
@@ -143,8 +161,8 @@ class ClipboardManager
   def bashit(md, str)
     (md.length-1).downto(0) do |i|
       str = str.gsub(/\$#{i}/, md[i])
-      raise "Untrusted system command." unless @is_cmd =~ str
       $stderr.puts str if $VERBOSE
+      raise "Untrusted system command." unless @is_cmd =~ str
       system str
     end
   end
