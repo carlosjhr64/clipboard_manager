@@ -1,0 +1,8 @@
+^(
+ (\.)|
+ (examples\/)|
+ (test\/)|
+ (TODO\.)|
+ (clipboard_manager.gemspec)|
+ (History\.)
+)
