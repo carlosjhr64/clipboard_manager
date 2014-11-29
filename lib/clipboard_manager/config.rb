@@ -77,8 +77,8 @@ use no-ask and no-running for false.
 
     # Note that Ruby 2 hashes preserves order, and order here is important.
     tasks: {
-      mplay: ['https?:\/\/www\.youtube\.com\/\S+', :system, "mplay '$0' &"],
-      firefox: ['^https?\/\/www.amazon.com\/', :firefox],
+      mplay: ['https?://www\.youtube\.com/\S+', :system, "mplay '$0' &"],
+      firefox: ['^https?://www.amazon.com/', :firefox],
       espeak: ['.{80,}', :espeak],
     }
   }

@@ -48,7 +48,7 @@ class ClipboardManager
 
     Such::Label.new vbox, :tasks!
     @checks = {}
-    CONFIG[:tasks].keys.each{|key| @checks = Such::CheckButton.new(vbox, [key.to_s], {set_active: true})}
+    CONFIG[:tasks].keys.each{|key| @checks[key] = Such::CheckButton.new(vbox, [key.to_s], {set_active: true})}
 
     window.show_all
   end
