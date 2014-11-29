@@ -2,9 +2,18 @@
 
 == DESCRIPTION:
 
+Ruby Gtk3App Clipboard Manager.
+
 == SYNOPSIS:
 
-== FEATURES/PROBLEMS:
+   gtk3app clipboard_manager [options]
+
+== FEATURES
+
+* wget youtube-dl mplayer command to play youtube video
+* firefox opens amazon webpage
+* espeak
+* history
 
 == INSTALL:
 
