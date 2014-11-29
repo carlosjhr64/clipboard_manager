@@ -33,7 +33,9 @@ class ClipboardManager
     program.mini_menu.append_menu_item(:toggle!){toggle}
     status(@ready)
 
+    @history = []
     request_text do |text|
+      add_history text
       @previous = text
       Rafini.thread_bang!{cycle}
     end
@@ -54,14 +56,30 @@ class ClipboardManager
       @checks[key] = Such::CheckButton.new(vbox, [key.to_s.capitalize], {set_active: true})
     end
 
-    @history = []
-    Such::Button.new(vbox, :history!){do_history}
+    Such::Button.new(vbox, :history_button!){do_history}
 
     window.show_all
   end
 
+  # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
   def do_history
-    puts @history
+    dialog = Such::Dialog.new :history_dialog!
+    dialog.add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+    dialog.add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    combo = Such::ComboBoxText.new dialog.child, :history_combo!
+    @history.each do |str|
+      if str.length > CONFIG[:MaxString]
+        n = CONFIG[:MaxString]/2 - 1
+        str = "#{str[0..n]}...#{str[-n..-1]}"
+      end
+      combo.append_text(str)
+    end
+    dialog.show_all
+    if dialog.run==Gtk::ResponseType::OK and combo.active_text
+      @previous = nil
+      CLIPBOARD.text = @history[combo.active]
+    end
+    dialog.destroy
   end
 
   def toggled

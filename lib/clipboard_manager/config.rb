@@ -33,6 +33,7 @@ use no-ask and no-running for false.
     TimeOut: 3,
     Sleep: 0.5,
     MaxHistory: 13,
+    MaxString: 60,
 
     IsPwd: is_pwd,
     IsCmd: '\A\w+\s+\'[^\']+\'(\s+\&)?\Z',
@@ -81,9 +82,17 @@ use no-ask and no-running for false.
       tasks: h0,
       tasks!: [:TASKS, :tasks],
 
-      HISTORY: [label: 'History'],
-      history: h0,
-      history!: [:HISTORY, :history],
+      HISTORY_BUTTON: [label: 'History'],
+      history_button: h0,
+      history_button!: [:HISTORY_BUTTON, :history_button],
+
+      HISTORY_DIALOG: [],
+      history_dialog: {},
+      history_dialog!: [:HISTORY_DIALOG, :history_dialog],
+
+      HISTORY_COMBO: [],
+      history_combo: {},
+      history_combo!: [:HISTORY_COMBO, :history_combo],
     },
 
     # Note that Ruby 2 hashes preserves order, and order here is important.
