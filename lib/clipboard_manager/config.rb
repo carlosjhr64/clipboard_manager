@@ -23,12 +23,16 @@ use no-ask and no-running for false.
   .{4,43}$              # 4 to 43 in length
 \Z'
 
+  a0 = Rafini::Empty::ARRAY
+  h0 = Rafini::Empty::HASH
+  s0 = Rafini::Empty::STRING
 
   CONFIG = {
     Help: help,
 
     TimeOut: 3,
     Sleep: 0.5,
+    MaxHistory: 13,
 
     IsPwd: is_pwd,
     IsCmd: '\A\w+\s+\'[^\']+\'(\s+\&)?\Z',
@@ -62,17 +66,24 @@ use no-ask and no-running for false.
       },
 
       VBOX: [:vertical],
-      vbox!: [:VBOX],
+      vbox: h0,
+      vbox!: [:VBOX, :vbox],
 
-      ASK: ['Ask for confirmation.'],
-      ask!: [:ASK],
+      ASK: ['Ask For Confirmation'],
+      ask: h0,
+      ask!: [:ASK, :ask],
 
-      RUNNING: ['On/Off.'],
-      running!: [:RUNNING],
+      RUNNING: ['On/Off'],
+      running: h0,
+      running!: [:RUNNING, :running],
 
       TASKS: ['Tasks:'],
-      tasks: {},
+      tasks: h0,
       tasks!: [:TASKS, :tasks],
+
+      HISTORY: [label: 'History'],
+      history: h0,
+      history!: [:HISTORY, :history],
     },
 
     # Note that Ruby 2 hashes preserves order, and order here is important.
