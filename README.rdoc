@@ -16,7 +16,7 @@ Ruby Gtk3App Clipboard Manager.
 * history
 
 Currently needs zenity for confirmations...
-Zenity is easy to install if it's not already in you linux system.
+Zenity is easy to install if it's not already in your linux system.
 Was just lazy on adding my own dialog for this, will fix soon.
 
 == INSTALL:
