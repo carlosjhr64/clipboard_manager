@@ -51,9 +51,9 @@ It will run the given system command "wget.. youtube_dl... '$0' | mplayer ...",
 where $0 will be replaced by the match.
 
 The _firefox_ task will run when the clipboard text matches an amazon link.
-It will open the link with firfox.
+It will open the link with firefox.
 
-The _espeak_ task will run the the clipboard text is at least 80 characters long.
+The _espeak_ task will run when the clipboard text is at least 80 characters long.
 It will have espeak read the text.
 
 Currently, clipboard_manager has three tasks methods: bashit(system), firefox, and espeak.
