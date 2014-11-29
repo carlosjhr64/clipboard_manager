@@ -1,8 +1,5 @@
 #! ruby
 require 'test/unit'
-require 'clipboard_manager'
 
 class TestClipboardManager < Test::Unit::TestCase
-  include ClipboardManager
-  # ...
 end
