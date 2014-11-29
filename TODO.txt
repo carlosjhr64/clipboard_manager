@@ -1,3 +1,5 @@
+require gtk3app to show on gemspec!
+
 == File List
 
 
