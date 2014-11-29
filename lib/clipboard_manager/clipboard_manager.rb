@@ -27,16 +27,17 @@ class ClipboardManager
     @off     = Gdk::Pixbuf.new(file: CONFIG[:Off])
 
     @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
-    @is_cmd  = Regexp.new(CONFIG[:IsCmd], Regexp::EXTENDED)
 
 
     program.mini_menu.append_menu_item(:toggle!){toggle}
     status(@ready)
 
-    @history = []
+    @history, @previous = [], nil
     request_text do |text|
-      add_history text
-      @previous = text
+      if text
+        add_history text
+        @previous = text
+      end
       Rafini.thread_bang!{cycle}
     end
 
@@ -180,7 +181,6 @@ class ClipboardManager
     (md.length-1).downto(0) do |i|
       str = str.gsub(/\$#{i}/, md[i])
       $stderr.puts str if $VERBOSE
-      raise "Untrusted system command." unless @is_cmd =~ str
       system str
     end
   end

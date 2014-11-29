@@ -36,7 +36,6 @@ use no-ask and no-running for false.
     MaxString: 60,
 
     IsPwd: is_pwd,
-    IsCmd: '\A\w+\s+\'[^\']+\'(\s+\&)?\Z',
 
     Working: "#{XDG['DATA']}/gtk3app/clipboardmanager/working.png",
     Ok:      "#{XDG['DATA']}/gtk3app/clipboardmanager/ok.png",
@@ -97,7 +96,11 @@ use no-ask and no-running for false.
 
     # Note that Ruby 2 hashes preserves order, and order here is important.
     tasks: {
-      mplay: ['https?://www\.youtube\.com/\S+', :system, "mplay '$0' &"],
+      mplayer: [
+        'https?://www\.youtube\.com/\S+',
+        :system,
+        "wget -O - $(youtube-dl -f 5/36/17/18 -g '$0') | mplayer -really-quiet -cache 8192 -cache-min 1 - &",
+      ],
       firefox: ['^https?://www.amazon.com/', :firefox],
       espeak: ['.{80,}', :espeak],
     }
