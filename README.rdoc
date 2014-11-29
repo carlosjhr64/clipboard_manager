@@ -19,6 +19,50 @@ Ruby Gtk3App Clipboard Manager.
 
   $ sudo gem install clipboard_manager
 
+== CONFIGURATION:
+
+After an initial run, your user configuration will found in:
+
+   ~/.config/gtk3app/clipboardmanager/config.yml
+
+Towards the bottom of the file you will find the available tasks:
+
+   :tasks:
+     :mplayer:
+     - https?://www\.youtube\.com/\S+
+     - :system
+     - wget -O - $(youtube-dl -f 5/36/17/18 -g '$0') | mplayer -really-quiet -cache 8192
+       -cache-min 1 - &
+     :firefox:
+     - "^https?://www.amazon.com/"
+     - :firefox
+     :espeak:
+     - ".{80,}"
+     - :espeak
+
+The _mplayer_ task will run when the clipboard text matches a youtube link.
+It will run the given system command "wget.. youtube_dl... '$0' | mplayer ...",
+where $0 will be replaced by the match.
+
+The _firefox_ task will run when the clipboard text matches an amazon link.
+It will open the link with firfox.
+
+The _espeak_ task will run the the clipboard text is at least 80 characters long.
+It will have espeak read the text.
+
+Currently, clipboard_manager has three tasks methods: bashit(system), firefox, and espeak.
+
+For firefox and espeak, the pattern is used to recognize the text.
+The whole copied text is used to pass on to firefox as a url, or espeak as text to be read.
+
+bashit is more complicated.
+It requires a command string which it will substitute $0, $1, $2... with match data.
+It then passes the string to system.
+
+See clipboard_manager/clipboard_manager.rb[https://github.com/carlosjhr64/clipboard_manager/blob/master/lib/clipboard_manager/clipboard_manager.rb]
+for details.
+Specifically, methods #espeak, #firefox, and #bashit, which are called from #manage.
+
 == LICENSE:
 
 (The MIT License)
