@@ -40,6 +40,8 @@ Towards the bottom of the file you will find the available tasks:
      - ".{80,}"
      - :espeak
 
+It is by this configuration that one can modify and add tasks.
+
 The _mplayer_ task will run when the clipboard text matches a youtube link.
 It will run the given system command "wget.. youtube_dl... '$0' | mplayer ...",
 where $0 will be replaced by the match.
