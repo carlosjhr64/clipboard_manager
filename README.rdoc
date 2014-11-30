@@ -10,14 +10,11 @@ Ruby Gtk3App Clipboard Manager.
 
 == FEATURES
 
+* history
 * wget youtube-dl mplayer command to play youtube video
 * firefox opens amazon webpage
 * espeak
-* history
-
-Currently needs zenity for confirmations...
-Zenity is easy to install if it's not already in your linux system.
-Was just lazy on adding my own dialog for this, will fix soon.
+* zbarcam qrcode
 
 == INSTALL:
 
@@ -33,10 +30,10 @@ Towards the bottom of the file you will find the available tasks:
 
    :tasks:
      :mplayer:
-     - https?://www\.youtube\.com/\S+
-     - :system
-     - wget -O - $(youtube-dl -f 5/36/17/18 -g '$0') | mplayer -really-quiet -cache 8192
-       -cache-min 1 - &
+     - "(https?://www\\.youtube\\.com/watch\\?v=[\\w\\-]+)"
+     - :bashit
+     - wget --quiet -O - $(youtube-dl -f 5/36/17/18 -g '$1') | mplayer -really-quiet
+       -cache 8192 -cache-min 1 -
      :firefox:
      - "^https?://www.amazon.com/"
      - :firefox
@@ -44,11 +41,12 @@ Towards the bottom of the file you will find the available tasks:
      - ".{80,}"
      - :espeak
 
+
 It is by this configuration that one can modify and add tasks.
 
 The _mplayer_ task will run when the clipboard text matches a youtube link.
 It will run the given system command "wget.. youtube_dl... '$0' | mplayer ...",
-where $0 will be replaced by the match.
+where $1 will be replaced by the match.
 
 The _firefox_ task will run when the clipboard text matches an amazon link.
 It will open the link with firefox.
@@ -56,7 +54,7 @@ It will open the link with firefox.
 The _espeak_ task will run when the clipboard text is at least 80 characters long.
 It will have espeak read the text.
 
-Currently, clipboard_manager has three tasks methods: bashit(system), firefox, and espeak.
+Currently, clipboard_manager has three tasks methods: bashit, firefox, and espeak.
 
 For firefox and espeak, the pattern is used to recognize the text.
 The whole copied text is used to pass on to firefox as a url, or espeak as text to be read.
