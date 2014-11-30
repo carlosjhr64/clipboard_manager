@@ -1,9 +1,26 @@
 module ClipboardManager
   using Rafini::Exception
 
+  class Dialog < Such::Dialog
+    def initialize(*par)
+      super
+      add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+      add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    end
+
+    def runs
+      show_all
+      response = run
+      response = yield(response)
+      destroy
+      return response
+    end
+  end
+
   def self.options=(opts)
     @@options=opts
   end
+
   def self.options
     @@options
   end
@@ -28,27 +45,17 @@ class ClipboardManager
 
     @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
 
-
     program.mini_menu.append_menu_item(:toggle!){toggle}
     status(@ready)
-
-    @history, @previous = [], nil
-    request_text do |text|
-      if text
-        add_history text
-        @previous = text
-      end
-      Rafini.thread_bang!{cycle}
-    end
 
     window = program.window
     vbox = Such::Box.new window, :vbox!
 
-    @ask = Such::CheckButton.new vbox, :ask!
-    @ask.active = ::ClipboardManager.options[:ask, true]
-
     @running = Such::CheckButton.new(vbox, :running!, 'toggled'){toggled}
     @running.active = ::ClipboardManager.options[:running, true]
+
+    @ask = Such::CheckButton.new vbox, :ask!
+    @ask.active = ::ClipboardManager.options[:ask, true]
 
     Such::Label.new vbox, :tasks!
 
@@ -59,14 +66,24 @@ class ClipboardManager
 
     Such::Button.new(vbox, :history_button!){do_history}
 
+    @history, @previous = [], nil
+    request_text do |text|
+      if text
+        add_history text
+        @previous = text
+      end
+      GLib::Timeout.add(CONFIG[:Sleep]) do
+        step if @running.active?
+        true # repeat
+      end
+    end
+
     window.show_all
   end
 
   # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
   def do_history
-    dialog = Such::Dialog.new :history_dialog!
-    dialog.add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
-    dialog.add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    dialog = Dialog.new :history_dialog!
     combo = Such::ComboBoxText.new dialog.child, :history_combo!
     @history.each do |str|
       if str.length > CONFIG[:MaxString]
@@ -75,12 +92,18 @@ class ClipboardManager
       end
       combo.append_text(str)
     end
-    dialog.show_all
-    if dialog.run==Gtk::ResponseType::OK and combo.active_text
-      @previous = nil
-      CLIPBOARD.text = @history[combo.active]
+    dialog.runs do |response|
+      if response==Gtk::ResponseType::OK and combo.active_text
+        @previous = nil
+        CLIPBOARD.text = @history[combo.active]
+      end
     end
-    dialog.destroy
+  end
+
+  def question?(name)
+    dialog = Dialog.new :question_dialog!
+    Such::Label.new dialog.child, ["Run #{name}?"]
+    dialog.runs{|response| (response==Gtk::ResponseType::OK)}
   end
 
   def toggled
@@ -106,13 +129,6 @@ class ClipboardManager
     @timer = Time.now
   end
 
-  def cycle
-    while true
-      step if @running.active?
-      sleep CONFIG[:Sleep]
-    end
-  end
-
   def step
     if @timer and Time.now - @timer > CONFIG[:TimeOut]
       @timer = nil
@@ -122,7 +138,10 @@ class ClipboardManager
       unless text.nil? or @previous == text
         @previous = text
         status @working
-        Rafini.thread_bang!{manage(text)}
+        GLib::Timeout.add(0) do
+          manage(text)
+          false # don't repeat
+        end
       end
     end
   end
@@ -147,7 +166,7 @@ class ClipboardManager
             espeak(text)
           when :firefox
             firefox(text)
-          when :system
+          when :bashit
             bashit(md, str)
           else
             raise "Method #{mth} not implemented."
@@ -163,25 +182,21 @@ class ClipboardManager
     status(@nope)
   end
 
-  def question?(wut)
-    @ask.active? ? system("zenity --question --text='#{wut}'") : true
-  end
-
   def espeak(text)
-    IO.popen('espeak --stdin', 'w'){|e|e.puts text.strip}
+    Thread.new{IO.popen('espeak --stdin', 'w'){|e|e.puts text.strip}}
   end
 
   def firefox(text)
     raise "not a url" unless text =~ /^https?:\/\/\S+$/
     raise "quote not allowed in url" if text =~ /'/
-    system("firefox '#{text}' &")
+    Process.detach spawn "firefox '#{text}'"
   end
 
   def bashit(md, str)
     (md.length-1).downto(0) do |i|
       str = str.gsub(/\$#{i}/, md[i])
-      $stderr.puts str if $VERBOSE
-      system str
+      $stderr.puts str
+      Process.detach spawn str
     end
   end
 

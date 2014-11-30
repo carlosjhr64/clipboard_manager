@@ -31,7 +31,7 @@ use no-ask and no-running for false.
     Help: help,
 
     TimeOut: 3,
-    Sleep: 0.5,
+    Sleep: 500,
     MaxHistory: 13,
     MaxString: 60,
 
@@ -85,21 +85,28 @@ use no-ask and no-running for false.
       history_button: h0,
       history_button!: [:HISTORY_BUTTON, :history_button],
 
-      HISTORY_DIALOG: [],
-      history_dialog: {},
+      HISTORY_DIALOG: a0,
+      history_dialog: h0,
       history_dialog!: [:HISTORY_DIALOG, :history_dialog],
 
-      HISTORY_COMBO: [],
-      history_combo: {},
+      HISTORY_COMBO: a0,
+      history_combo: h0,
       history_combo!: [:HISTORY_COMBO, :history_combo],
+
+      QUESTION_DIALOG: a0,
+      question_dialog: {
+        set_window_position: :center,
+        set_keep_above: true,
+      },
+      question_dialog!: [:question_dialog, :QUESTION_DIALOG],
     },
 
     # Note that Ruby 2 hashes preserves order, and order here is important.
     tasks: {
       mplayer: [
         'https?://www\.youtube\.com/\S+',
-        :system,
-        "wget -O - $(youtube-dl -f 5/36/17/18 -g '$0') | mplayer -really-quiet -cache 8192 -cache-min 1 - &",
+        :bashit,
+        "wget -O - $(youtube-dl -f 5/36/17/18 -g '$0') | mplayer -really-quiet -cache 8192 -cache-min 1 -",
       ],
       firefox: ['^https?://www.amazon.com/', :firefox],
       espeak: ['.{80,}', :espeak],
