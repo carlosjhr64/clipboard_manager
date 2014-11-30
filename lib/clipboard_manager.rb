@@ -14,3 +14,4 @@ require_relative 'clipboard_manager/clipboard_manager.rb'
 #`zbarcam`
 #`firefox`
 #`espeak`
+#`system`
