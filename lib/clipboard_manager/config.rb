@@ -31,10 +31,12 @@ use no-ask and no-running for false.
     Help: help,
 
     StatusTimeOut: 3,
-    ZbarTimeOut: 3,
     Sleep: 750,
     MaxHistory: 13,
     MaxString: 60,
+
+    QrcTimeOut: 3,
+    QrcCommand: '/usr/bin/zbarcam --nodisplay --raw --prescale=800x800',
 
     IsPwd: is_pwd,
 
@@ -60,6 +62,9 @@ use no-ask and no-running for false.
 
       DO_TOGGLE: ['Toggle On/Off'],
       do_toggle!: [:DO_TOGGLE, 'activate'],
+
+      DO_HISTORY: ['History'],
+      do_history!: [:DO_HISTORY, 'activate'],
 
       DO_QRCODE: ['QR-Code'],
       do_qrcode!: [:DO_QRCODE, 'activate'],

@@ -65,6 +65,7 @@ class ClipboardManager
 
     mm = program.mini_menu
     mm.append_menu_item(:do_toggle!){do_toggle!}
+    mm.append_menu_item(:do_history!){do_history!}
     mm.append_menu_item(:do_qrcode!){do_qrcode!}
 
     @history, @previous = [], nil
@@ -104,13 +105,13 @@ class ClipboardManager
 
   def do_qrcode!
     qrcode = nil
-    IO.popen('/usr/bin/zbarcam --nodisplay --raw --prescale=800x800', 'r') do |io|
+    IO.popen(CONFIG[:QrcCommand], 'r') do |io|
       begin
-        Timeout.timeout(CONFIG[:ZbarTimeOut]) do
+        Timeout.timeout(CONFIG[:QrcTimeOut]) do
           qrcode = io.gets.strip
         end
       rescue Timeout::Error
-        $!.puts 'ZbarTimeOut'
+        $!.puts 'QrcTimeOut'
       ensure
         Process.kill('INT', io.pid)
       end
