@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
 
   s.name     = 'clipboard_manager'
-  s.version  = '0.0.0'
+  s.version  = '1.0.0'
 
   s.homepage = 'https://github.com/carlosjhr64/clipboard_manager'
 
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2014-11-29'
+  s.date     = '2014-11-30'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -25,6 +25,7 @@ SUMMARY
   s.require_paths = ["lib"]
   s.files = %w(
 README.rdoc
+config/config.yml
 data/VERSION
 data/logo.png
 data/nope.png
@@ -38,9 +39,7 @@ lib/clipboard_manager/config.rb
 lib/clipboard_manager/version.rb
   )
 
+  s.add_runtime_dependency 'gtk3app', '~> 1.0', '>= 1.0.0'
   s.requirements << 'ruby: ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux]'
-  s.requirements << 'zenity: 3.8.0'
-  s.requirements << 'firefox: Mozilla Firefox 33.1'
-  s.requirements << 'system: linux/bash'
 
 end

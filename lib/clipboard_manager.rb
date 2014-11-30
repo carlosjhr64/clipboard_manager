@@ -11,3 +11,6 @@ require_relative 'clipboard_manager/clipboard_manager.rb'
 
 # Requires:
 #`ruby`
+#`zbarcam`
+#`firefox`
+#`espeak`
