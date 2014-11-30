@@ -6,7 +6,8 @@
     --running  Start in active mode.
   Default for options is true,
   use no-ask and no-running for false.
-:TimeOut: 3
+:StatusTimeOut: 3
+:ZbarTimeOut: 3
 :Sleep: 750
 :MaxHistory: 13
 :MaxString: 60
@@ -36,10 +37,15 @@
     :set_comments: 'A Ruby Gtk3App Clipboard Manager '
     :set_website: https://github.com/carlosjhr64/clipboard_manager
     :set_website_label: See it at GitHub!
-  :TOGGLE:
+  :DO_TOGGLE:
   - Toggle On/Off
-  :toggle!:
-  - :TOGGLE
+  :do_toggle!:
+  - :DO_TOGGLE
+  - activate
+  :DO_QRCODE:
+  - QR-Code
+  :do_qrcode!:
+  - :DO_QRCODE
   - activate
   :window:
     :set_title: Clipboard Manager
@@ -85,6 +91,12 @@
   :history_combo!:
   - :HISTORY_COMBO
   - :history_combo
+  :QRCODE_BUTTON:
+  - :label: QR-Code
+  :qrcode_button: *1
+  :qrcode_button!:
+  - :QRCODE_BUTTON
+  - :qrcode_button
   :QUESTION_DIALOG: *2
   :question_dialog:
     :set_window_position: :center
