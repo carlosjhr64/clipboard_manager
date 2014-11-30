@@ -200,7 +200,7 @@ class ClipboardManager
           status(@ok)
         rescue RuntimeError
           $!.puts
-          status(@nope) # TODO it's not just nope!
+          status(@nope)
         end
         return
       end

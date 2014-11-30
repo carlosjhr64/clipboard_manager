@@ -1,6 +1,6 @@
 module ClipboardManager
 
-  help = <<-HELP # TODO
+  help = <<-HELP
 Usage: gtk3app clipboardmanager [options]
 Options:
   --ask      Ask for confirmation.
