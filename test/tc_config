@@ -1,0 +1,78 @@
+#! ruby
+require 'yaml'
+require 'digest'
+require 'test/unit'
+require 'xdg'
+require 'rafini'
+require 'clipboard_manager/version'
+require 'clipboard_manager/config'
+
+class TestConfig < Test::Unit::TestCase
+  def test_config
+    assert_nothing_raised() do
+
+      dir = File.dirname __dir__
+      assert_equal dir, ClipboardManager::APPDIR
+
+      assert_equal Hash, ClipboardManager::CONFIG.class
+      help= ClipboardManager::CONFIG[:Help]
+      assert_not_nil help
+      assert_equal String, help.class
+      assert_match /Usage:/, help
+      assert_match /Options:/, help
+
+      thing = ClipboardManager::CONFIG[:thing]
+      assert_not_nil thing
+      assert_equal Hash, thing.class
+
+      # Checking convention use
+      thing.each do |k,v|
+        case k
+        when /^[A-Z_]+$/
+          assert_equal Array, v.class
+        when /^[a-z_]+$/
+          assert_equal Hash, v.class
+        when /^[a-zA-Z]+$/
+          assert((v.class==String) || (v.class==Fixnum))
+        when /^\w+\!$/
+          assert_equal Array, v.class
+        else
+          raise "Got bad thing key :#{k}."
+        end
+      end
+
+      # sanity checks
+      assert_equal ClipboardManager::VERSION, thing[:about_dialog][:set_version]
+      assert_equal 'Clipboard Manager', thing[:about_dialog][:set_program_name]
+
+      # Do we have the QR-Code Command?
+      cmd = ClipboardManager::CONFIG[:QrcCommand].split(/\s+/).first
+      assert system("which #{cmd} > /dev/null"), "#{cmd} not found"
+
+      rgx = Regexp.new ClipboardManager::CONFIG[:IsPwd], Regexp::EXTENDED
+      assert_match rgx, 'aA1!'
+
+      ClipboardManager::CONFIG[:tasks].each do |k,v|
+        str, key, cmd = v
+        rgx = Regexp.new str, Regexp::EXTENDED # ensure we can at least do this
+        # ensure proper key method
+        assert [:bashit,:firefox,:espeak].include?(key), "#{key} not a task method"
+        #assert true
+        # ensure that cmd makes sense
+        if key==:bashit
+          assert_equal String, cmd.class
+        else
+          assert_nil cmd
+        end
+      end
+
+      dump = YAML.dump ClipboardManager::CONFIG
+      File.write('./test/dump.yml', dump)
+      d0 = Digest::MD5.hexdigest dump
+      d1 = `md5sum ./config/config.yml`.strip.split(/\s+/).first
+      d2 = `md5sum ~/.config/gtk3app/clipboardmanager/config.yml`.strip.split(/\s+/).first
+      assert_equal d0, d1, './data config file differs from CONFIG'
+      assert_equal d1, d2, './data config file differs from ~/.config/gtk3app/clipboardmanager/'
+    end
+  end
+end

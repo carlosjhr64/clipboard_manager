@@ -1,3 +1,4 @@
 *.swp
 test/error.log
+test/dump.yml
 *.gem
