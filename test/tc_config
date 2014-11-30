@@ -73,6 +73,8 @@ class TestConfig < Test::Unit::TestCase
       d2 = `md5sum ~/.config/gtk3app/clipboardmanager/config.yml`.strip.split(/\s+/).first
       assert_equal d0, d1, './data config file differs from CONFIG'
       assert_equal d1, d2, './data config file differs from ~/.config/gtk3app/clipboardmanager/'
+      assert_equal 420, File.world_readable?('./config/config.yml'), './config/config.yml should be world readable.'
+      assert_equal 420, File.world_readable?('./data/VERSION'), './data/VERSION should be world readable.'
     end
   end
 end
