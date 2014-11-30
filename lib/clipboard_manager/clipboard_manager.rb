@@ -101,6 +101,7 @@ class ClipboardManager
   end
 
   def question?(name)
+    return true unless @ask.active?
     dialog = Dialog.new :question_dialog!
     Such::Label.new dialog.child, ["Run #{name}?"]
     dialog.runs{|response| (response==Gtk::ResponseType::OK)}
@@ -183,7 +184,7 @@ class ClipboardManager
   end
 
   def espeak(text)
-    Thread.new{IO.popen('espeak --stdin', 'w'){|e|e.puts text.strip}}
+    Rafini.thread_bang!{IO.popen('espeak --stdin', 'w'){|e|e.puts text.strip}}
   end
 
   def firefox(text)
@@ -195,9 +196,9 @@ class ClipboardManager
   def bashit(md, str)
     (md.length-1).downto(0) do |i|
       str = str.gsub(/\$#{i}/, md[i])
-      $stderr.puts str
-      Process.detach spawn str
     end
+    $stderr.puts str
+    Process.detach spawn str
   end
 
 end
