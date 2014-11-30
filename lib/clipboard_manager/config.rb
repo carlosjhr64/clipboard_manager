@@ -30,7 +30,8 @@ use no-ask and no-running for false.
   CONFIG = {
     Help: help,
 
-    TimeOut: 3,
+    StatusTimeOut: 3,
+    ZbarTimeOut: 3,
     Sleep: 750,
     MaxHistory: 13,
     MaxString: 60,
@@ -57,8 +58,11 @@ use no-ask and no-running for false.
         set_website_label: 'See it at GitHub!',
       },
 
-      TOGGLE: ['Toggle On/Off'],
-      toggle!: [:TOGGLE, 'activate'],
+      DO_TOGGLE: ['Toggle On/Off'],
+      do_toggle!: [:DO_TOGGLE, 'activate'],
+
+      DO_QRCODE: ['QR-Code'],
+      do_qrcode!: [:DO_QRCODE, 'activate'],
 
       window: {
         set_title: "Clipboard Manager",
@@ -94,6 +98,10 @@ use no-ask and no-running for false.
       HISTORY_COMBO: a0,
       history_combo: h0,
       history_combo!: [:HISTORY_COMBO, :history_combo],
+
+      QRCODE_BUTTON: [label: 'QR-Code'],
+      qrcode_button: h0,
+      qrcode_button!: [:QRCODE_BUTTON, :qrcode_button],
 
       QUESTION_DIALOG: a0,
       question_dialog: {

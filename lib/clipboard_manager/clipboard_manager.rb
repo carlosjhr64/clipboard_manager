@@ -33,7 +33,6 @@ class ClipboardManager
   CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
   def initialize(program)
-    @program = program
     @image = program.mini.children.first
     @timer = nil
 
@@ -44,9 +43,6 @@ class ClipboardManager
     @off     = Gdk::Pixbuf.new(file: CONFIG[:Off])
 
     @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
-
-    program.mini_menu.append_menu_item(:toggle!){toggle}
-    status(@ready)
 
     window = program.window
     vbox = Such::Box.new window, :vbox!
@@ -64,7 +60,12 @@ class ClipboardManager
       @checks[key] = Such::CheckButton.new(vbox, [key.to_s.capitalize], {set_active: true})
     end
 
-    Such::Button.new(vbox, :history_button!){do_history}
+    Such::Button.new(vbox, :history_button!){do_history!}
+    Such::Button.new(vbox, :qrcode_button!){do_qrcode!}
+
+    mm = program.mini_menu
+    mm.append_menu_item(:do_toggle!){do_toggle!}
+    mm.append_menu_item(:do_qrcode!){do_qrcode!}
 
     @history, @previous = [], nil
     request_text do |text|
@@ -78,11 +79,12 @@ class ClipboardManager
       end
     end
 
+    status(@ready)
     window.show_all
   end
 
   # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
-  def do_history
+  def do_history!
     dialog = Dialog.new :history_dialog!
     combo = Such::ComboBoxText.new dialog.child, :history_combo!
     @history.each do |str|
@@ -100,6 +102,28 @@ class ClipboardManager
     end
   end
 
+  def do_qrcode!
+    qrcode = nil
+    IO.popen('/usr/bin/zbarcam --nodisplay --raw --prescale=800x800', 'r') do |io|
+      begin
+        Timeout.timeout(CONFIG[:ZbarTimeOut]) do
+          qrcode = io.gets.strip
+        end
+      rescue Timeout::Error
+        $!.puts 'ZbarTimeOut'
+      ensure
+        Process.kill('INT', io.pid)
+      end
+    end
+    if qrcode.nil?
+      CLIPBOARD.clear
+      status(@nope)
+    else
+      CLIPBOARD.text = qrcode
+      status(@ok)
+    end
+  end
+
   def question?(name)
     return true unless @ask.active?
     dialog = Dialog.new :question_dialog!
@@ -111,7 +135,7 @@ class ClipboardManager
     @running.active? ? status(@ready) : status(@off)
   end
 
-  def toggle
+  def do_toggle!
     request_text do |text|
       @previous = text
       @running.active = !@running.active?
@@ -131,7 +155,7 @@ class ClipboardManager
   end
 
   def step
-    if @timer and Time.now - @timer > CONFIG[:TimeOut]
+    if @timer and Time.now - @timer > CONFIG[:StatusTimeOut]
       @timer = nil
       status @ready
     end
