@@ -188,7 +188,6 @@ class ClipboardManager
   end
 
   def firefox(text)
-    raise "not a url" unless text =~ /^https?:\/\/\S+$/
     raise "quote not allowed in url" if text =~ /'/
     Process.detach spawn "firefox '#{text}'"
   end
