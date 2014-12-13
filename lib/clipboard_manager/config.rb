@@ -36,7 +36,6 @@ use no-ask and no-running for false.
     MaxString: 60,
 
     QrcTimeOut: 3,
-    QrcCommand: 'zbarcam --nodisplay --raw --prescale=800x800',
 
     IsPwd: is_pwd,
 

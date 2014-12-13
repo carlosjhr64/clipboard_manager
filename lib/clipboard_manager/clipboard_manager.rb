@@ -104,18 +104,7 @@ class ClipboardManager
   end
 
   def do_qrcode!
-    qrcode = nil
-    IO.popen(CONFIG[:QrcCommand], 'r') do |io|
-      begin
-        Timeout.timeout(CONFIG[:QrcTimeOut]) do
-          qrcode = io.gets.strip
-        end
-      rescue Timeout::Error
-        $!.puts 'QrcTimeOut'
-      ensure
-        Process.kill('INT', io.pid)
-      end
-    end
+    qrcode = Helpema::ZBar.qrcode(CONFIG[:QrcTimeOut])
     if qrcode.nil?
       CLIPBOARD.clear
       status(@nope)

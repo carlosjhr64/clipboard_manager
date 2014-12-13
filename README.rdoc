@@ -1,5 +1,7 @@
 = clipboard_manager
 
+{<img src="https://badge.fury.io/rb/helpema.svg" alt="Gem Version" />}[http://badge.fury.io/rb/helpema]
+
 == DESCRIPTION:
 
 Ruby Gtk3App Clipboard Manager.

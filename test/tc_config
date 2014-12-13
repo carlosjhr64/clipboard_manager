@@ -45,10 +45,6 @@ class TestConfig < Test::Unit::TestCase
       assert_equal ClipboardManager::VERSION, thing[:about_dialog][:set_version]
       assert_equal 'Clipboard Manager', thing[:about_dialog][:set_program_name]
 
-      # Do we have the QR-Code Command?
-      cmd = ClipboardManager::CONFIG[:QrcCommand].split(/\s+/).first
-      assert system("which #{cmd} > /dev/null"), "#{cmd} not found"
-
       rgx = Regexp.new ClipboardManager::CONFIG[:IsPwd], Regexp::EXTENDED
       assert_match rgx, 'aA1!'
 

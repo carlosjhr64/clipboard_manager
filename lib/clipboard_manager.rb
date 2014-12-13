@@ -3,6 +3,7 @@ require 'timeout'
 
 # Work gems
 require 'gtk3app'
+require 'helpema/zbar'
 
 # This Gem
 require_relative 'clipboard_manager/version.rb'
