@@ -39,6 +39,9 @@ use no-ask and no-running for false.
 
     IsPwd: is_pwd,
 
+    Espeak: 'espeak --stdin',
+    Firefox: 'firefox',
+
     Working: "#{XDG['DATA']}/gtk3app/clipboardmanager/working.png",
     Ok:      "#{XDG['DATA']}/gtk3app/clipboardmanager/ok.png",
     Nope:    "#{XDG['DATA']}/gtk3app/clipboardmanager/nope.png",

@@ -1,4 +1,5 @@
 require gtk3app to show on gemspec!
+espeak and firefox should be from CONFIG
 
 == File List
 

@@ -198,12 +198,12 @@ class ClipboardManager
   end
 
   def espeak(text)
-    Rafini.thread_bang!{IO.popen('espeak --stdin', 'w'){|e|e.puts text.strip}}
+    Rafini.thread_bang!{IO.popen(CONFIG[:Espeak], 'w'){|e|e.puts text.strip}}
   end
 
   def firefox(text)
     raise "quote not allowed in url" if text =~ /'/
-    Process.detach spawn "firefox '#{text}'"
+    Process.detach spawn "#{CONFIG[:Firefox]} '#{text}'"
   end
 
   def bashit(md, str)
