@@ -1,4 +1,12 @@
-require gtk3app to show on gemspec!
+TODO
+
+require gtk3app to show on gemspec?
+  There are issues with doing this.
+  Shared libraries may conflict.
+  Need to think about this.
+
+DONE (1.0.4)
+
 espeak and firefox should be from CONFIG
 
 == File List
