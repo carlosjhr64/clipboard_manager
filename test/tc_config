@@ -65,7 +65,7 @@ class TestConfig < Test::Unit::TestCase
       dump = YAML.dump ClipboardManager::CONFIG
       File.write('./test/dump.yml', dump)
       d0 = Digest::MD5.hexdigest dump
-      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-#{ClipboardManager::VERSION}.yml`.strip.split(/\s+/).first
+      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-1.0.yml`.strip.split(/\s+/).first
       assert_equal d0, d1, 'config file differs from CONFIG'
       assert_equal 420, File.world_readable?('./data/VERSION'), './data/VERSION should be world readable.'
     end
