@@ -20,13 +20,16 @@ Ruby Gtk3App Clipboard Manager.
 
 == INSTALL:
 
+Note that you do need gtk3app:
+
+  $ sudo gem install gtk3app
   $ sudo gem install clipboard_manager
 
 == CONFIGURATION:
 
 After an initial run, your user configuration will found in:
 
-   ~/.config/gtk3app/clipboardmanager/config.yml
+   ~/.config/gtk3app/clipboardmanager/config-?.?.yml
 
 Towards the bottom of the file you will find the available tasks:
 

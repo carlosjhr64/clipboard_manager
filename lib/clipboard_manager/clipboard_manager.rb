@@ -1,22 +1,6 @@
 module ClipboardManager
   using Rafini::Exception
 
-  class Dialog < Such::Dialog
-    def initialize(*par)
-      super
-      add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
-      add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
-    end
-
-    def runs
-      show_all
-      response = run
-      response = yield(response)
-      destroy
-      return response
-    end
-  end
-
   def self.options=(opts)
     @@options=opts
   end
@@ -86,8 +70,8 @@ class ClipboardManager
 
   # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
   def do_history!
-    dialog = Dialog.new :history_dialog!
-    combo = Such::ComboBoxText.new dialog.child, :history_combo!
+    dialog = Gtk3App::Dialog::CancelOk.new(:history_dialog!)
+    combo = dialog.combo :history_combo!
     @history.each do |str|
       if str.length > CONFIG[:MaxString]
         n = CONFIG[:MaxString]/2 - 1
@@ -96,7 +80,7 @@ class ClipboardManager
       combo.append_text(str)
     end
     dialog.runs do |response|
-      if response==Gtk::ResponseType::OK and combo.active_text
+      if response == Gtk::ResponseType::OK and combo.active_text
         @previous = nil
         CLIPBOARD.text = @history[combo.active]
       end
@@ -116,9 +100,9 @@ class ClipboardManager
 
   def question?(name)
     return true unless @ask.active?
-    dialog = Dialog.new :question_dialog!
-    Such::Label.new dialog.child, ["Run #{name}?"]
-    dialog.runs{|response| (response==Gtk::ResponseType::OK)}
+    dialog = Gtk3App::Dialog::NoYes.new :question_dialog!
+    dialog.label.text = "Run #{name}?"
+    dialog.runs
   end
 
   def toggled
