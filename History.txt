@@ -11,3 +11,5 @@ a22c4fec8524bac407e0d6ab20d5fbb7  pkg/clipboard_manager-1.0.2.gem
 7744da72d2c337151ed0f1ad42688a1d  pkg/clipboard_manager-1.0.3.gem
 === 1.0.4 / 2014-12-29 10:46:44 -0800
 4047866390840bf0eec585517babdb93  pkg/clipboard_manager-1.0.4.gem
+=== 1.0.5 / 2014-12-30 12:30:46 -0800
+c05e4c832f101342535412409e66f436  pkg/clipboard_manager-1.0.5.gem
