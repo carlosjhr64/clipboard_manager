@@ -17,16 +17,16 @@ use no-ask and no-running for false.
   (?!\w+:\/\/)          # not like url
   (?!\/[a-z]+\/[a-z])   # not like linux path
   (?![a-z]+\/[a-z]+\/)  # not like relative path
-  (?=.*\d)              # at least on diget
+  (?=.*\d)              # at least one diget
   (?=.*[a-z])           # at least one lower case letter
   (?=.*[A-Z])           # at least one upper case letter
   (?=.*[^\w\s])         # at least one special character
-  .{4,43}$              # 4 to 43 in length
+  \S*$                  # no spaces
 \Z'
 
   a0 = Rafini::Empty::ARRAY
   h0 = Rafini::Empty::HASH
-  s0 = Rafini::Empty::STRING
+  #s0 = Rafini::Empty::STRING
 
   CONFIG = {
     Help: help,

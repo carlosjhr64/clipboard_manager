@@ -53,15 +53,14 @@ class ClipboardManager
     mm.append_menu_item(:do_qrcode!){do_qrcode!}
 
     @history, @previous = [], nil
-    request_text do |text|
-      if text
-        add_history text
-        @previous = text
-      end
-      GLib::Timeout.add(CONFIG[:Sleep]) do
-        step if @running.active?
-        true # repeat
-      end
+    text = request_text
+    if text
+      add_history text
+      @previous = text
+    end
+    GLib::Timeout.add(CONFIG[:Sleep]) do
+      step if @running.active?
+      true # repeat
     end
 
     status(@ready)
@@ -110,17 +109,15 @@ class ClipboardManager
   end
 
   def do_toggle!
-    request_text do |text|
-      @previous = text
-      @running.active = !@running.active?
-    end
+    text = request_text
+    @previous = text
+    @running.active = !@running.active?
   end
 
   def request_text
-    CLIPBOARD.request_text do |_, text|
-      # nil anything that looks like a pwd.
-      (@is_pwd=~text)? yield(nil) : yield(text)
-    end
+    text = CLIPBOARD.wait_for_text
+    text = nil if @is_pwd=~text
+    return text
   end
 
   def status(type)
@@ -133,14 +130,13 @@ class ClipboardManager
       @timer = nil
       status @ready
     end
-    request_text do |text|
-      unless text.nil? or @previous == text
-        @previous = text
-        status @working
-        GLib::Timeout.add(0) do
-          manage(text)
-          false # don't repeat
-        end
+    text = request_text
+    unless text.nil? or @previous == text
+      @previous = text
+      status @working
+      GLib::Timeout.add(0) do
+        manage(text)
+        false # don't repeat
       end
     end
   end
