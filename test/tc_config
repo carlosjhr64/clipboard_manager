@@ -8,6 +8,7 @@ require 'clipboard_manager/version'
 require 'clipboard_manager/config'
 
 class TestConfig < Test::Unit::TestCase
+  using Rafini::String
   def test_config
     assert_nothing_raised() do
 
@@ -18,8 +19,8 @@ class TestConfig < Test::Unit::TestCase
       help= ClipboardManager::CONFIG[:Help]
       assert_not_nil help
       assert_equal String, help.class
-      assert_match /Usage:/, help
-      assert_match /Options:/, help
+      assert_match(/Usage:/, help)
+      assert_match(/Options:/, help)
 
       thing = ClipboardManager::CONFIG[:thing]
       assert_not_nil thing
@@ -42,7 +43,7 @@ class TestConfig < Test::Unit::TestCase
       end
 
       # sanity checks
-      assert_equal ClipboardManager::VERSION, thing[:about_dialog][:set_version]
+      assert_equal ClipboardManager::VERSION.semantic(0..1), thing[:about_dialog][:set_version]
       assert_equal 'Clipboard Manager', thing[:about_dialog][:set_program_name]
 
       rgx = Regexp.new ClipboardManager::CONFIG[:IsPwd], Regexp::EXTENDED
@@ -65,7 +66,7 @@ class TestConfig < Test::Unit::TestCase
       dump = YAML.dump ClipboardManager::CONFIG
       File.write('./test/dump.yml', dump)
       d0 = Digest::MD5.hexdigest dump
-      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-1.0.yml`.strip.split(/\s+/).first
+      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-1.1.yml`.strip.split(/\s+/).first
       assert_equal d0, d1, 'config file differs from CONFIG'
       assert_equal 420, File.world_readable?('./data/VERSION'), './data/VERSION should be world readable.'
     end
