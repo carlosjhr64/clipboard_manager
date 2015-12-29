@@ -152,7 +152,7 @@ class ClipboardManager
     CONFIG[:tasks].each do |name, _|
       next unless @checks[name].active?
       rgx, mth, str = _
-      rgx = Regexp.new(rgx, Regexp::EXTENDED)
+      rgx = Regexp.new(rgx, Regexp::EXTENDED | Regexp::MULTILINE)
       if md=rgx.match(text) and question?(name)
         CLIPBOARD.text=Rafini::Empty::STRING
         begin

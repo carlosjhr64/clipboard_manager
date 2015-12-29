@@ -57,7 +57,7 @@ use no-ask and no-running for false.
       about_dialog: {
         set_program_name: 'Clipboard Manager',
         set_version: VERSION.semantic(0..1),
-        set_copyright: '(c) 2014 CarlosJHR64',
+        set_copyright: '(c) 2015 CarlosJHR64',
         set_comments: 'A Ruby Gtk3App Clipboard Manager ',
         set_website: 'https://github.com/carlosjhr64/clipboard_manager',
         set_website_label: 'See it at GitHub!',

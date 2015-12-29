@@ -3,7 +3,7 @@ require 'test/unit'
 require 'clipboard_manager/version'
 
 class TestVersion < Test::Unit::TestCase
-  VERSION = '1.1.0'
+  VERSION = '1.1.1'
   def test_version
     assert_nothing_raised() do
       assert_equal VERSION, ClipboardManager::VERSION
