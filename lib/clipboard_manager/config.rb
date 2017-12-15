@@ -1,15 +1,6 @@
 module ClipboardManager
   using Rafini::String
 
-  help = <<-HELP
-Usage: gtk3app clipboardmanager [options]
-Options:
-  --ask      Ask for confirmation.
-  --running  Start in active mode.
-Default for options is true,
-use no-ask and no-running for false.
-  HELP
-
   APPDIR = File.dirname File.dirname __dir__
 
   is_pwd =
@@ -29,14 +20,12 @@ use no-ask and no-running for false.
   #s0 = Rafini::Empty::STRING
 
   CONFIG = {
-    Help: help,
-
     StatusTimeOut: 3,
     Sleep: 750,
     MaxHistory: 13,
     MaxString: 60,
 
-    QrcTimeOut: 3,
+    QrcTimeOut: 12,
 
     IsPwd: is_pwd,
 
@@ -63,13 +52,13 @@ use no-ask and no-running for false.
         set_website_label: 'See it at GitHub!',
       },
 
-      DO_TOGGLE: ['Toggle On/Off'],
+      DO_TOGGLE: [label:'Toggle On/Off'],
       do_toggle!: [:DO_TOGGLE, 'activate'],
 
-      DO_HISTORY: ['History'],
+      DO_HISTORY: [label:'History'],
       do_history!: [:DO_HISTORY, 'activate'],
 
-      DO_QRCODE: ['QR-Code'],
+      DO_QRCODE: [label:'QR-Code'],
       do_qrcode!: [:DO_QRCODE, 'activate'],
 
       window: {
@@ -126,7 +115,7 @@ use no-ask and no-running for false.
         :bashit,
         "wget --quiet -O - $(youtube-dl -f 5/36/17/18 -g '$1') | mplayer -really-quiet -cache 8192 -cache-min 1 -",
       ],
-      firefox: ['^https?://www.amazon.com/', :firefox],
+      firefox: ['^https?://', :firefox],
       espeak: ['.{80,}', :espeak],
     }
   }

@@ -1,14 +1,6 @@
 module ClipboardManager
   using Rafini::Exception
 
-  def self.options=(opts)
-    @@options=opts
-  end
-
-  def self.options
-    @@options
-  end
-
   def self.run(program)
     ClipboardManager.new(program)
   end
@@ -20,22 +12,22 @@ class ClipboardManager
     @image = program.mini.children.first
     @timer = nil
 
-    @working = Gdk::Pixbuf.new(file: CONFIG[:Working])
-    @ok      = Gdk::Pixbuf.new(file: CONFIG[:Ok])
-    @nope    = Gdk::Pixbuf.new(file: CONFIG[:Nope])
-    @ready   = Gdk::Pixbuf.new(file: CONFIG[:Ready])
-    @off     = Gdk::Pixbuf.new(file: CONFIG[:Off])
+    @working = GdkPixbuf::Pixbuf.new(file: CONFIG[:Working])
+    @ok      = GdkPixbuf::Pixbuf.new(file: CONFIG[:Ok])
+    @nope    = GdkPixbuf::Pixbuf.new(file: CONFIG[:Nope])
+    @ready   = GdkPixbuf::Pixbuf.new(file: CONFIG[:Ready])
+    @off     = GdkPixbuf::Pixbuf.new(file: CONFIG[:Off])
 
     @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
 
-    window = program.window
-    vbox = Such::Box.new window, :vbox!
+    @window = program.window
+    vbox = Such::Box.new @window, :vbox!
 
     @running = Such::CheckButton.new(vbox, :running!, 'toggled'){toggled}
-    @running.active = ::ClipboardManager.options[:running, true]
+    @running.active = true
 
     @ask = Such::CheckButton.new vbox, :ask!
-    @ask.active = ::ClipboardManager.options[:ask, true]
+    @ask.active = true
 
     Such::Label.new vbox, :tasks!
 
@@ -64,12 +56,13 @@ class ClipboardManager
     end
 
     status(@ready)
-    window.show_all
+    @window.show_all
   end
 
   # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
   def do_history!
     dialog = Gtk3App::Dialog::CancelOk.new(:history_dialog!)
+    dialog.transient_for = @window
     combo = dialog.combo :history_combo!
     @history.each do |str|
       if str.length > CONFIG[:MaxString]
@@ -87,7 +80,7 @@ class ClipboardManager
   end
 
   def do_qrcode!
-    qrcode = Helpema::ZBar.qrcode(CONFIG[:QrcTimeOut])
+    qrcode = Helpema::ZBar.cam(CONFIG[:QrcTimeOut])
     if qrcode.nil?
       CLIPBOARD.clear
       status(@nope)
@@ -100,6 +93,7 @@ class ClipboardManager
   def question?(name)
     return true unless @ask.active?
     dialog = Gtk3App::Dialog::NoYes.new :question_dialog!
+    dialog.transient_for = @window
     dialog.label.text = "Run #{name}?"
     dialog.runs
   end
@@ -115,9 +109,11 @@ class ClipboardManager
   end
 
   def request_text
-    text = CLIPBOARD.wait_for_text
-    text = nil if @is_pwd=~text
-    return text
+    if text = CLIPBOARD.wait_for_text
+      text.strip!
+      return text unless text.empty? or @is_pwd.match?(text)
+    end
+    nil
   end
 
   def status(type)

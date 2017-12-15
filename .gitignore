@@ -2,3 +2,4 @@
 test/errors.log
 test/dump.yml
 *.gem
+TODO.txt
