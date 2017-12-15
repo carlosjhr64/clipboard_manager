@@ -8,7 +8,7 @@ Ruby Gtk3App Clipboard Manager.
 
 == SYNOPSIS:
 
-   gtk3app clipboard_manager [options]
+   clipboard_manager [options]
 
 == FEATURES
 
@@ -40,7 +40,7 @@ Towards the bottom of the file you will find the available tasks:
      - wget --quiet -O - $(youtube-dl -f 5/36/17/18 -g '$1') | mplayer -really-quiet
        -cache 8192 -cache-min 1 -
      :firefox:
-     - "^https?://www.amazon.com/"
+     - "^https?://"
      - :firefox
      :espeak:
      - ".{80,}"
