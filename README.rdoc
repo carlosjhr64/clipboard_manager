@@ -72,6 +72,15 @@ See clipboard_manager/clipboard_manager.rb[https://github.com/carlosjhr64/clipbo
 for details.
 Specifically, methods #espeak, #firefox, and #bashit, which are called from #manage.
 
+== HELP:
+
+   Usage:
+     clipboard_manager [:options+]
+   Options:
+     -v --version
+     -h --help
+
+
 == LICENSE:
 
 (The MIT License)
