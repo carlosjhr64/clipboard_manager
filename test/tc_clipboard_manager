@@ -1,5 +1,0 @@
-#! ruby
-require 'test/unit'
-
-class TestClipboardManager < Test::Unit::TestCase
-end

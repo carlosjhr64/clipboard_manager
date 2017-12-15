@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name     = 'clipboard_manager'
-  s.version  = '1.1.1'
+  s.version  = '2.0.0'
 
   s.homepage = 'https://github.com/carlosjhr64/clipboard_manager'
 

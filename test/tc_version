@@ -1,12 +1,11 @@
 #! ruby
 require 'test/unit'
-require 'clipboard_manager/version'
 
 class TestVersion < Test::Unit::TestCase
-  VERSION = '1.1.1'
+  VERSION = '2.0.0'
   def test_version
     assert_nothing_raised() do
-      assert_equal VERSION, ClipboardManager::VERSION
+      assert_equal VERSION, `ruby -I ./lib ./bin/clipboard_manager -v`.strip
       assert_equal VERSION, File.read('./data/VERSION').strip
       assert( system "grep version clipboard_manager.gemspec | grep = | grep #{VERSION}" )
     end

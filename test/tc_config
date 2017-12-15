@@ -4,7 +4,10 @@ require 'digest'
 require 'test/unit'
 require 'xdg'
 require 'rafini'
-require 'clipboard_manager/version'
+
+module ClipboardManager
+  VERSION = '2.0.0'
+end
 require 'clipboard_manager/config'
 
 class TestConfig < Test::Unit::TestCase
@@ -16,11 +19,6 @@ class TestConfig < Test::Unit::TestCase
       assert_equal dir, ClipboardManager::APPDIR
 
       assert_equal Hash, ClipboardManager::CONFIG.class
-      help= ClipboardManager::CONFIG[:Help]
-      assert_not_nil help
-      assert_equal String, help.class
-      assert_match(/Usage:/, help)
-      assert_match(/Options:/, help)
 
       thing = ClipboardManager::CONFIG[:thing]
       assert_not_nil thing
@@ -66,7 +64,7 @@ class TestConfig < Test::Unit::TestCase
       dump = YAML.dump ClipboardManager::CONFIG
       File.write('./test/dump.yml', dump)
       d0 = Digest::MD5.hexdigest dump
-      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-1.1.yml`.strip.split(/\s+/).first
+      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-2.0.yml`.strip.split(/\s+/).first
       assert_equal d0, d1, 'config file differs from CONFIG'
       assert_equal 420, File.world_readable?('./data/VERSION'), './data/VERSION should be world readable.'
     end
