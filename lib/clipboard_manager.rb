@@ -1,13 +1,19 @@
-# Standard Libraries
-require 'timeout'
+module ClipboardManager
+  VERSION = '3.0.0'
 
-# Work gems
-require 'gtk3app'
-require 'helpema/zbar'
+  def self.requires
+    # Standard Libraries
+    require 'timeout'
 
-# This Gem
-require_relative 'clipboard_manager/config.rb'
-require_relative 'clipboard_manager/clipboard_manager.rb'
+    # Work gems
+    require 'gtk3app'
+    require 'helpema/zbar'
+
+    # This Gem
+    require_relative 'clipboard_manager/config.rb'
+    require_relative 'clipboard_manager/clipboard_manager.rb'
+  end
+end
 
 # Requires:
 #`ruby`

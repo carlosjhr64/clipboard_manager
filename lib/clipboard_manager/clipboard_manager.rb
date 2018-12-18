@@ -40,9 +40,9 @@ class ClipboardManager
     Such::Button.new(vbox, :qrcode_button!){do_qrcode!}
 
     mm = program.mini_menu
-    mm.append_menu_item(:do_toggle!){do_toggle!}
-    mm.append_menu_item(:do_history!){do_history!}
-    mm.append_menu_item(:do_qrcode!){do_qrcode!}
+    mm.add_menu_item(:do_toggle!){do_toggle!}
+    mm.add_menu_item(:do_history!){do_history!}
+    mm.add_menu_item(:do_qrcode!){do_qrcode!}
 
     @history, @previous = [], nil
     text = request_text
@@ -147,10 +147,10 @@ class ClipboardManager
     add_history text
     CONFIG[:tasks].each do |name, _|
       next unless @checks[name].active?
-      rgx, mth, str = _
+      rgx, mth, clr, str = _
       rgx = Regexp.new(rgx, Regexp::EXTENDED | Regexp::MULTILINE)
       if md=rgx.match(text) and question?(name)
-        CLIPBOARD.text=Rafini::Empty::STRING
+        CLIPBOARD.clear if clr
         begin
           case mth
           when :espeak
@@ -184,7 +184,7 @@ class ClipboardManager
 
   def bashit(md, str)
     (md.length-1).downto(0) do |i|
-      str = str.gsub(/\$#{i}/, md[i])
+      str = str.gsub(/\$#{i}/, md[i] || '')
     end
     $stderr.puts str
     Process.detach spawn str

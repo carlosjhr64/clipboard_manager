@@ -1,60 +1,59 @@
-= clipboard_manager
+# clipboard_manager
 
-{<img src="https://badge.fury.io/rb/clipboard_manager.svg" alt="Gem Version" />}[http://badge.fury.io/rb/clipboard_manager]
-
-== DESCRIPTION:
+## DESCRIPTION:
 
 Ruby Gtk3App Clipboard Manager.
 
-== SYNOPSIS:
-
-   clipboard_manager [options]
-
-== FEATURES
+## FEATURES
 
 * history
 * wget youtube-dl mplayer command to play youtube video
-* firefox opens amazon webpage
+* firefox opens url
 * espeak
 * zbarcam qrcode
 
-== INSTALL:
+## INSTALL:
 
-Note that you do need gtk3app:
+Note that you'll need gtk3app:
 
-  $ sudo gem install gtk3app
-  $ sudo gem install clipboard_manager
+    $ sudo gem install gtk3app
+    $ sudo gem install clipboard_manager
 
-== CONFIGURATION:
+## CONFIGURATION:
 
 After an initial run, your user configuration will found in:
 
-   ~/.config/gtk3app/clipboardmanager/config-?.?.yml
+    ~/.config/gtk3app/clipboardmanager/config-?.?.yml
 
 Towards the bottom of the file you will find the available tasks:
 
-   :tasks:
+    :tasks:
      :mplayer:
      - "(https?://www\\.youtube\\.com/watch\\?v=[\\w\\-]+)"
      - :bashit
+     - true
      - wget --quiet -O - $(youtube-dl -f 5/36/17/18 -g '$1') | mplayer -really-quiet
        -cache 8192 -cache-min 1 -
      :firefox:
      - "^https?://"
      - :firefox
+     - true
      :espeak:
      - ".{80,}"
      - :espeak
-
+     - true
 
 It is by this configuration that one can modify and add tasks.
+With the boolean `true` value the clipboard will clear on the matched task.
+If you don't want the clipboard cleared on a matched task,
+set the boolean value to `false`.
 
 The _mplayer_ task will run when the clipboard text matches a youtube link.
-It will run the given system command "wget.. youtube_dl... '$0' | mplayer ...",
-where $1 will be replaced by the match.
+It will run the given system command `wget.. youtube_dl... '$1' | mplayer ...`,
+where $1 will be replaced by the captured 1 match.
 
-The _firefox_ task will run when the clipboard text matches an amazon link.
-It will open the link with firefox.
+The _firefox_ task will run when the clipboard text matches a http address.
+It will open the address with firefox.
 
 The _espeak_ task will run when the clipboard text is at least 80 characters long.
 It will have espeak read the text.
@@ -68,20 +67,20 @@ bashit is more complicated.
 It requires a command string which it will substitute $0, $1, $2... with match data.
 It then passes the string to system.
 
-See clipboard_manager/clipboard_manager.rb[https://github.com/carlosjhr64/clipboard_manager/blob/master/lib/clipboard_manager/clipboard_manager.rb]
+See [clipboard_manager/clipboard_manager.rb](https://github.com/carlosjhr64/clipboard_manager/blob/master/lib/clipboard_manager/clipboard_manager.rb)
 for details.
 Specifically, methods #espeak, #firefox, and #bashit, which are called from #manage.
 
-== HELP:
+## HELP:
 
-   Usage:
+    Usage:
      clipboard_manager [:options+]
-   Options:
+    Options:
      -v --version
      -h --help
 
 
-== LICENSE:
+## LICENSE:
 
 (The MIT License)
 

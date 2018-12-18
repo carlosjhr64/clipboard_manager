@@ -1,20 +1,14 @@
 #!/usr/bin/env ruby
-module ClipboardManager
-  VERSION = '2.0.0'
-  if _ = ARGV.shift
-    if ['-v','--version'].include?(_)
-      puts VERSION
-      exit 0
-    end
-    puts <<-HELP
+require 'help_parser'
+require 'clipboard_manager'
+
+OPTIONS = HelpParser[ClipboardManager::VERSION, <<HELP]
 Usage:
   clipboard_manager [:options+]
 Options:
-  -v --version
   -h --help
-    HELP
-    exit 0
-  end
-end
-require 'clipboard_manager'
+  -v --version
+HELP
+
+ClipboardManager.requires
 Gtk3App.main ClipboardManager

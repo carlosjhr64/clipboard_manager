@@ -46,7 +46,7 @@ module ClipboardManager
       about_dialog: {
         set_program_name: 'Clipboard Manager',
         set_version: VERSION.semantic(0..1),
-        set_copyright: '(c) 2015 CarlosJHR64',
+        set_copyright: '(c) 2018 CarlosJHR64',
         set_comments: 'A Ruby Gtk3App Clipboard Manager ',
         set_website: 'https://github.com/carlosjhr64/clipboard_manager',
         set_website_label: 'See it at GitHub!',
@@ -113,10 +113,11 @@ module ClipboardManager
       mplayer: [
         '(https?://www\.youtube\.com/watch\?v=[\w\-]+)',
         :bashit,
+        true, # clears clipboard
         "wget --quiet -O - $(youtube-dl -f 5/36/17/18 -g '$1') | mplayer -really-quiet -cache 8192 -cache-min 1 -",
       ],
-      firefox: ['^https?://', :firefox],
-      espeak: ['.{80,}', :espeak],
+      firefox: ['^https?://', :firefox, true],
+      espeak: ['.{80,}', :espeak, true],
     }
   }
 

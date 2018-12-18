@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
 
   s.name     = 'clipboard_manager'
-  s.version  = '2.0.0'
+  s.version  = '3.0.0'
 
   s.homepage = 'https://github.com/carlosjhr64/clipboard_manager'
 
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2017-12-15'
+  s.date     = '2018-12-18'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION

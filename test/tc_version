@@ -2,7 +2,7 @@
 require 'test/unit'
 
 class TestVersion < Test::Unit::TestCase
-  VERSION = '2.0.0'
+  VERSION = '3.0.0'
   def test_version
     assert_nothing_raised() do
       assert_equal VERSION, `ruby -I ./lib ./bin/clipboard_manager -v`.strip

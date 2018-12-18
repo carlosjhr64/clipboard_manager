@@ -6,7 +6,7 @@ require 'xdg'
 require 'rafini'
 
 module ClipboardManager
-  VERSION = '2.0.0'
+  VERSION = '3.0.0'
 end
 require 'clipboard_manager/config'
 
@@ -48,7 +48,7 @@ class TestConfig < Test::Unit::TestCase
       assert_match rgx, 'aA1!'
 
       ClipboardManager::CONFIG[:tasks].each do |k,v|
-        str, key, cmd = v
+        str, key, clr, cmd = v
         rgx = Regexp.new str, Regexp::EXTENDED # ensure we can at least do this
         # ensure proper key method
         assert [:bashit,:firefox,:espeak].include?(key), "#{key} not a task method"
@@ -64,7 +64,7 @@ class TestConfig < Test::Unit::TestCase
       dump = YAML.dump ClipboardManager::CONFIG
       File.write('./test/dump.yml', dump)
       d0 = Digest::MD5.hexdigest dump
-      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-2.0.yml`.strip.split(/\s+/).first
+      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-3.0.yml`.strip.split(/\s+/).first
       assert_equal d0, d1, 'config file differs from CONFIG'
       assert_equal 420, File.world_readable?('./data/VERSION'), './data/VERSION should be world readable.'
     end

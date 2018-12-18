@@ -12,8 +12,7 @@ def tc(name)
 end
 
 if tc('version')    and
-   tc('config')     and
-   tc('clipboard_manager')
+   tc('config')
   puts 'All tests passed!'
   File.unlink LOG
 else
