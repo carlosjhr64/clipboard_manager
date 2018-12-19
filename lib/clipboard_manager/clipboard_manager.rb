@@ -5,6 +5,44 @@ module ClipboardManager
     ClipboardManager.new(program)
   end
 
+class NoYes < Such::Dialog
+  def initialize(*par)
+    super
+    add_button '_No', Gtk::ResponseType::CANCEL
+    add_button '_Yes', Gtk::ResponseType::OK
+  end
+
+  def label(*par)
+    Such::Label.new child, *par
+  end
+
+  def ok?
+    show_all
+    response = run
+    destroy
+    response == Gtk::ResponseType::OK
+  end
+end
+
+class CancelOk < Such::Dialog
+  def initialize(*par)
+    super
+    add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+    add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+  end
+
+  def combo(*par)
+    Such::ComboBoxText.new child, *par
+  end
+
+  def runs
+    show_all
+    response = run
+    yield if response == Gtk::ResponseType::OK
+    destroy
+  end
+end
+
 class ClipboardManager
   CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
@@ -61,7 +99,7 @@ class ClipboardManager
 
   # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
   def do_history!
-    dialog = Gtk3App::Dialog::CancelOk.new(:history_dialog!)
+    dialog = CancelOk.new(:history_dialog!)
     dialog.transient_for = @window
     combo = dialog.combo :history_combo!
     @history.each do |str|
@@ -71,8 +109,8 @@ class ClipboardManager
       end
       combo.append_text(str)
     end
-    dialog.runs do |response|
-      if response == Gtk::ResponseType::OK and combo.active_text
+    dialog.runs do
+      if combo.active_text
         @previous = nil
         CLIPBOARD.text = @history[combo.active]
       end
@@ -92,10 +130,10 @@ class ClipboardManager
 
   def question?(name)
     return true unless @ask.active?
-    dialog = Gtk3App::Dialog::NoYes.new :question_dialog!
+    dialog = NoYes.new :question_dialog!
     dialog.transient_for = @window
     dialog.label.text = "Run #{name}?"
-    dialog.runs
+    dialog.ok?
   end
 
   def toggled
