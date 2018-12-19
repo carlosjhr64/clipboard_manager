@@ -77,6 +77,8 @@ class ClipboardManager
     Such::Button.new(vbox, :history_button!){do_history!}
     Such::Button.new(vbox, :qrcode_button!){do_qrcode!}
 
+    program.app_menu.each{|_|_.destroy if _.key==:fs!}
+
     mm = program.mini_menu
     mm.add_menu_item(:do_toggle!){do_toggle!}
     mm.add_menu_item(:do_history!){do_history!}
