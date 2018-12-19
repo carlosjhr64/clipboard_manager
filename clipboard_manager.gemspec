@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2018-12-18'
+  s.date     = '2018-12-19'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -21,6 +21,7 @@ SUMMARY
 
   s.require_paths = ['lib']
   s.files = %w(
+LICENSE
 README.md
 bin/clipboard_manager
 data/VERSION
