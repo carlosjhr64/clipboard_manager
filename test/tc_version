@@ -2,12 +2,20 @@
 require 'test/unit'
 
 class TestVersion < Test::Unit::TestCase
-  VERSION = '3.0.0'
   def test_version
-    assert_nothing_raised() do
-      assert_equal VERSION, `ruby -I ./lib ./bin/clipboard_manager -v`.strip
-      assert_equal VERSION, File.read('./data/VERSION').strip
-      assert( system "grep version clipboard_manager.gemspec | grep = | grep #{VERSION}" )
+    version = '3.0.210705'
+    assert_equal(version, `egrep -o '[0-9]+\\.[0-9]+\\.[0-9]+' lib/*.rb`.split.first)
+    if File.exist?('data/VERSION')
+      assert_equal(version, File.read('data/VERSION').strip)
+    end
+    if executable = `ls bin/* 2> /dev/null`.split.first
+      assert_equal(version, `#{executable} --version`.strip)
+    end
+    if gemspec = `ls *.gemspec 2> /dev/null`.split.first
+      assert_equal(version, `egrep -o '[0-9]+\\.[0-9]+\\.[0-9]+' #{gemspec}`.split.first)
+    end
+    if readme = `ls README.* 2> /dev/null`.split.first
+      assert_equal(version, `egrep -o '[0-9]+\\.[0-9]+\\.[0-9]+' #{readme}`.split.first)
     end
   end
 end

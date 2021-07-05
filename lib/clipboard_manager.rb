@@ -1,5 +1,5 @@
 module ClipboardManager
-  VERSION = '3.0.0'
+  VERSION = '3.0.210705'
 
   def self.requires
     # Standard Libraries

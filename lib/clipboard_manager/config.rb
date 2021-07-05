@@ -32,16 +32,16 @@ module ClipboardManager
     Espeak: 'espeak --stdin',
     Firefox: 'firefox',
 
-    Working: "#{XDG['DATA']}/gtk3app/clipboardmanager/working.png",
-    Ok:      "#{XDG['DATA']}/gtk3app/clipboardmanager/ok.png",
-    Nope:    "#{XDG['DATA']}/gtk3app/clipboardmanager/nope.png",
-    Ready:   "#{XDG['DATA']}/gtk3app/clipboardmanager/ready.png",
-    Off:     "#{XDG['DATA']}/gtk3app/clipboardmanager/off.png",
+    Working: "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/working.png",
+    Ok:      "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/ok.png",
+    Nope:    "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/nope.png",
+    Ready:   "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/ready.png",
+    Off:     "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/off.png",
 
     thing: {
 
       HelpFile: "https://github.com/carlosjhr64/clipboard_manager",
-      Logo: "#{XDG['DATA']}/gtk3app/clipboardmanager/logo.png",
+      Logo: "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/logo.png",
 
       about_dialog: {
         set_program_name: 'Clipboard Manager',

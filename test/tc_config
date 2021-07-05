@@ -2,7 +2,7 @@
 require 'yaml'
 require 'digest'
 require 'test/unit'
-require 'xdg'
+#require 'xdg'
 require 'rafini'
 
 module ClipboardManager

@@ -1,8 +1,10 @@
 ^(
  (\.)|
+ (\w+\.gemspec)|
+ (cucumber\.)|
  (examples\/)|
+ (features\/)|
+ (History\.)|
  (test\/)|
- (TODO\.)|
- (clipboard_manager.gemspec)|
- (History\.)
+ (TODO\.)
 )
