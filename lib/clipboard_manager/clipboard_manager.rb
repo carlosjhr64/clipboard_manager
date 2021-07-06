@@ -71,7 +71,7 @@ class ClipboardManager
     Such::Label.new vbox, :tasks!
 
     @checks = {}
-    CONFIG[:Tasks].keys.each do |key|
+    CONFIG[:Tasks!].keys.each do |key|
       @checks[key] = Such::CheckButton.new(vbox, [key.to_s.capitalize], {set_active: true})
     end
 
@@ -179,7 +179,7 @@ class ClipboardManager
 
   def manage(text)
     add_history text
-    CONFIG[:Tasks].each do |name, _|
+    CONFIG[:Tasks!].each do |name, _|
       next unless @checks[name].active?
       rgx, mth, clr, str = _
       rgx = Regexp.new(rgx, Regexp::EXTENDED | Regexp::MULTILINE)

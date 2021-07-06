@@ -1,72 +1,60 @@
 #! ruby
-require 'yaml'
-require 'digest'
 require 'test/unit'
-#require 'xdg'
 require 'rafini'
-
-module ClipboardManager
-  VERSION = '3.0.0'
+class UserSpace
+  XDG = {}
+  XDG['data'] = '~/.data' # Mock-up
 end
-require 'clipboard_manager/config'
+class ClipboardManager
+  VERSION = '4.0.210706' # Mock-up
+  require 'clipboard_manager/config'
+end
 
 class TestConfig < Test::Unit::TestCase
   using Rafini::String
+  CONFIG = ClipboardManager::CONFIG
+
   def test_config
-    assert_nothing_raised() do
+    # Sanity checks
+    assert_equal Hash, CONFIG.class
+    assert_equal ClipboardManager::VERSION.semantic(0..1), CONFIG[:about_dialog][:set_version]
+    assert_equal 'Clipboard Manager', CONFIG[:about_dialog][:set_program_name]
 
-      dir = File.dirname __dir__
-      assert_equal dir, ClipboardManager::APPDIR
+    # Vefify isPwd
+    rgx = Regexp.new CONFIG[:IsPwd], Regexp::EXTENDED
+    assert_match rgx, 'aA1!'
 
-      assert_equal Hash, ClipboardManager::CONFIG.class
-
-      thing = ClipboardManager::CONFIG[:thing]
-      assert_not_nil thing
-      assert_equal Hash, thing.class
-
-      # Checking convention use
-      thing.each do |k,v|
-        case k
-        when /^[A-Z_]+$/
-          assert_equal Array, v.class
-        when /^[a-z_]+$/
-          assert_equal Hash, v.class
-        when /^[a-zA-Z]+$/
-          assert((v.class==String) || (v.class==Fixnum))
-        when /^\w+\!$/
-          assert_equal Array, v.class
-        else
-          raise "Got bad thing key :#{k}."
-        end
+    # Checking convention use
+    ClipboardManager::CONFIG.each do |k,v|
+      msg = "#{k}: #{v.inspect}"
+      case k
+      when /^[A-Z_]+$/ # CAPS
+        assert_equal Array, v.class, msg
+      when /^[a-z_]+$/ # lower
+        assert_equal Hash, v.class, msg
+      when /^[a-z_]+\!$/ # lower!
+        assert_equal Array, v.class, msg
+      when /^[a-zA-Z]+$/ # Camel
+        assert((v.class==String) || (v.class==Integer), msg)
+      when /^[a-zA-Z]+!$/ # Camel!
+        assert_equal Hash, v.class, msg
+      else
+        raise "Got bad thing key :#{k}."
       end
+    end
 
-      # sanity checks
-      assert_equal ClipboardManager::VERSION.semantic(0..1), thing[:about_dialog][:set_version]
-      assert_equal 'Clipboard Manager', thing[:about_dialog][:set_program_name]
-
-      rgx = Regexp.new ClipboardManager::CONFIG[:IsPwd], Regexp::EXTENDED
-      assert_match rgx, 'aA1!'
-
-      ClipboardManager::CONFIG[:tasks].each do |k,v|
-        str, key, clr, cmd = v
-        rgx = Regexp.new str, Regexp::EXTENDED # ensure we can at least do this
-        # ensure proper key method
-        assert [:bashit,:firefox,:espeak].include?(key), "#{key} not a task method"
-        #assert true
-        # ensure that cmd makes sense
-        if key==:bashit
-          assert_equal String, cmd.class
-        else
-          assert_nil cmd
-        end
+    CONFIG[:Tasks!].each do |k,v|
+      str, key, clr, cmd = v
+      rgx = Regexp.new str, Regexp::EXTENDED # ensure we can at least do this
+      # ensure proper key method
+      assert [:espeak,:open,:bashit].include?(key), "#{key} not a task method"
+      #assert true
+      # ensure that cmd makes sense
+      if key==:bashit
+        assert_equal String, cmd.class
+      else
+        assert_nil cmd
       end
-
-      dump = YAML.dump ClipboardManager::CONFIG
-      File.write('./test/dump.yml', dump)
-      d0 = Digest::MD5.hexdigest dump
-      d1 = `md5sum ~/.config/gtk3app/clipboardmanager/config-3.0.yml`.strip.split(/\s+/).first
-      assert_equal d0, d1, 'config file differs from CONFIG'
-      assert_equal 420, File.world_readable?('./data/VERSION'), './data/VERSION should be world readable.'
     end
   end
 end

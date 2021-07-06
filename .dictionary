@@ -1,5 +1,4 @@
 accessor
-APPDIR
 ARGV
 attr
 autoload
@@ -14,9 +13,8 @@ clr
 ComboBoxText
 config
 CONFIG
-dir
-dirname
 dl
+Dont
 downto
 env
 espeak
@@ -46,11 +44,14 @@ MaxString
 md
 MERCHANTABILITY
 minime
+Minime
 mplayer
 mth
 MULTILINE
 nevermind
 NONINFRINGEMENT
+notdecorated
+notoggle
 NoYes
 ok
 Ok

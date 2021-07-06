@@ -8,7 +8,6 @@ add
 add_button
 add_history
 add_menu_item
-APPDIR
 append_text
 app_menu
 ARGV
@@ -41,8 +40,6 @@ detach
 dialog
 Dialog
 dictionary
-__dir__
-dirname
 do_history
 do_qrcode
 do_toggle
@@ -58,7 +55,6 @@ exit
 extend
 EXTENDED
 file
-File
 Gdk
 GdkPixbuf
 get

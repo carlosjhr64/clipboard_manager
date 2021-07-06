@@ -2,8 +2,6 @@ class ClipboardManager
   using Rafini::String # String#semantic
   extend Rafini::Empty # a0 and h0
 
-  APPDIR = File.dirname File.dirname __dir__
-
   is_pwd =
 '\A
   (?!\w+:\/\/)          # not like url
@@ -37,7 +35,7 @@ class ClipboardManager
     HelpFile: "https://github.com/carlosjhr64/clipboard_manager",
     Logo: "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/logo.png",
 
-    Tasks: { # Note that Ruby's Hash preserves order, and order here is important.
+    Tasks!: { # Note that Ruby's Hash preserves order, and order here is important.
       calculator: [
         '^([\d\.\+\-\*\/\%\(\) ]{3,80})$',
         :bashit,
