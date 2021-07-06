@@ -8,9 +8,9 @@ class ClipboardManager
     Options:
       -h --help
       -v --version
-      --minime\treal mimime
+      --minime    \t real minime
   HELP
-  VERSION = '3.0.210706'
+  VERSION = '4.0.210706'
 
 
   def self.run
