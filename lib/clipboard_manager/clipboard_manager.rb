@@ -76,7 +76,7 @@ class ClipboardManager
     end
 
     Such::Button.new(vbox, :history_button!){do_history!}
-    Such::Button.new(vbox, :qrcode_button!){do_qrcode!}
+    Such::Button.new(vbox, :qrcode_button!){do_qrcode!} if ClipboardManager.do_qrcode
 
     @history, @previous = [], nil
     text = request_text

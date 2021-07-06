@@ -1,4 +1,7 @@
 class ClipboardManager
+  class << self; attr_accessor :do_qrcode; end
+  ClipboardManager.do_qrcode = true
+
   HELP = <<~HELP
     Usage:
       clipboard_manager [:options+]
@@ -7,7 +10,8 @@ class ClipboardManager
       -v --version
       --minime\treal mimime
   HELP
-  VERSION = '3.0.210705'
+  VERSION = '3.0.210706'
+
 
   def self.run
     # Standard Library
@@ -15,7 +19,13 @@ class ClipboardManager
 
     # Work gems
     require 'gtk3app'
-    require 'helpema'
+    begin
+      require 'helpema'
+      ::Helpema::ZBar # autoload
+    rescue
+      # no ZBar? OK, nevermind.
+      ClipboardManager.do_qrcode = false
+    end
 
     # This Gem
     require_relative 'clipboard_manager/config.rb'
