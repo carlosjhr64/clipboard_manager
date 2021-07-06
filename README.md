@@ -10,79 +10,95 @@ Ruby Gtk3App Clipboard Manager.
 
 ## FEATURES
 
-* history
-* wget youtube-dl mplayer command to play youtube video
-* firefox opens url
+Clipboard auto sends to:
+
+* gnome-calculator
+* google dictionary
+* xdg-open url
 * espeak
-* zbarcam qrcode
+
+Also:
+
+* History
+* QR-Code copy to clipboard
 
 ## INSTALL:
 
 Note that you'll need gtk3app:
-
-    $ sudo gem install gtk3app
-    $ sudo gem install clipboard_manager
-
+```shell
+$ gem install clipboard_manager
+```
 ## CONFIGURATION:
 
 After an initial run, your user configuration will found in:
 
-    ~/.config/gtk3app/clipboardmanager/config-?.?.yml
+    ~/.config/gtk3app/clipboardmanager/config-?.?.rbon
 
-Towards the bottom of the file you will find the available tasks:
-
-    :tasks:
-     :mplayer:
-     - "(https?://www\\.youtube\\.com/watch\\?v=[\\w\\-]+)"
-     - :bashit
-     - true
-     - wget --quiet -O - $(youtube-dl -f 5/36/17/18 -g '$1') | mplayer -really-quiet
-       -cache 8192 -cache-min 1 -
-     :firefox:
-     - "^https?://"
-     - :firefox
-     - true
-     :espeak:
-     - ".{80,}"
-     - :espeak
-     - true
-
+At top of the file you will find the available tasks:
+```ruby
+{
+  Tasks!: {
+    calculator: [
+      "^([\\d\\.\\+\\-\\*\\/\\%\\(\\) ]{3,80})$",
+      :bashit,
+      true,
+      "gnome-calculator -e '$1'"
+    ],
+    dictionary: [
+      "^(\\w+)$",
+      :bashit,
+      true,
+      "xdg-open 'https://www.google.com/search?q=definition+of+$1'"
+    ],
+    url: [
+      "^https?://\\w[\\-\\+\\.\\w]*(\\.\\w+)(:\\d+)?(/\\S*)?$",
+      :open,
+      true
+    ],
+    espeak: [
+      ".{80,}",
+      :espeak,
+      true
+    ]
+  },
+  #...
+}
+```
 It is by this configuration that one can modify and add tasks.
+Warning: although the config file looks like `ruby` code,
+it is read like a config file(not evaled).
+Within tolerance(see [rbon](https://rubygems.org/gems/rbon)) you must maintain it's structure.
+
+ClipboardManager has three tasks methods: `:bashit`, `:open`, and `:espeak`.
+`:bashit` will take a command to be run by the system.
+`:open` will `xdg-open` the clip.
+`:espeak` will `espeak` the clip.
+
 With the boolean `true` value the clipboard will clear on the matched task.
 If you don't want the clipboard cleared on a matched task,
 set the boolean value to `false`.
 
-The _mplayer_ task will run when the clipboard text matches a youtube link.
-It will run the given system command `wget.. youtube_dl... '$1' | mplayer ...`,
-where $1 will be replaced by the captured 1 match.
-
-The _firefox_ task will run when the clipboard text matches a http address.
-It will open the address with firefox.
-
-The _espeak_ task will run when the clipboard text is at least 80 characters long.
-It will have espeak read the text.
-
-Currently, clipboard_manager has three tasks methods: bashit, firefox, and espeak.
-
-For firefox and espeak, the pattern is used to recognize the text.
-The whole copied text is used to pass on to firefox as a url, or espeak as text to be read.
-
-bashit is more complicated.
-It requires a command string which it will substitute $0, $1, $2... with match data.
+Note that `:bashit` requires a extra command string which
+it will substitute $0, $1, $2... with match data.
 It then passes the string to system.
 
-See [clipboard_manager/clipboard_manager.rb](https://github.com/carlosjhr64/clipboard_manager/blob/master/lib/clipboard_manager/clipboard_manager.rb)
-for details.
-Specifically, methods #espeak, #firefox, and #bashit, which are called from #manage.
+The `:caculator` task will run when the clip looks like a bunch of number being operated.
+
+The `:espeak` task will run when the clip is at least 80 characters long.
+It will have espeak read the text.
 
 ## HELP:
-
-    Usage:
-      clipboard_manager [:options+]
-    Options:
-      -h --help
-      -v --version
-
+```shell
+$ clipboard_manager --help
+Usage:
+  clipboard_manager [:options+]
+Options:
+  -h --help
+  -v --version
+  --minime      	 Real minime
+  --notoggle    	 Minime wont toggle decorated and keep above
+  --notdecorated	 Dont decorate window
+```
 ## LICENSE:
 
 (The MIT License)

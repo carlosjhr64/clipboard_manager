@@ -15,6 +15,23 @@ class ClipboardManager
 \Z'
 
   CONFIG = {
+    Tasks!: { # Note that Ruby's Hash preserves order, and order here is important.
+      calculator: [
+        '^([\d\.\+\-\*\/\%\(\) ]{3,80})$',
+        :bashit,
+        true, # clears clipboard
+        "gnome-calculator -e '$1'",
+      ],
+      dictionary: [
+        '^(\w+)$',
+        :bashit,
+        true, # clears clipboard
+        "xdg-open 'https://www.google.com/search?q=definition+of+$1'",
+      ],
+      url: ['^https?://\w[\-\+\.\w]*(\.\w+)(:\d+)?(/\S*)?$', :open, true],
+      espeak: ['.{80,}', :espeak, true],
+    },
+
     StatusTimeOut: 3,
     Sleep: 750,
     MaxHistory: 13,
@@ -34,23 +51,6 @@ class ClipboardManager
 
     HelpFile: "https://github.com/carlosjhr64/clipboard_manager",
     Logo: "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/logo.png",
-
-    Tasks!: { # Note that Ruby's Hash preserves order, and order here is important.
-      calculator: [
-        '^([\d\.\+\-\*\/\%\(\) ]{3,80})$',
-        :bashit,
-        true, # clears clipboard
-        "gnome-calculator -e '$1'",
-      ],
-      dictionary: [
-        '^(\w+)$',
-        :bashit,
-        true, # clears clipboard
-        "xdg-open 'https://www.google.com/search?q=definition+of+$1'",
-      ],
-      url: ['^https?://\w[\-\+\.\w]*(\.\w+)(:\d+)?(/\S*)?$', :open, true],
-      espeak: ['.{80,}', :espeak, true],
-    },
 
     ### Gui Things ###
 
