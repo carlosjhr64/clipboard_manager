@@ -37,6 +37,7 @@ lib/clipboard_manager/config.rb
   s.executables << 'clipboard_manager'
   s.add_runtime_dependency 'gtk3app', '~> 5.1', '>= 5.1.210203'
   s.add_runtime_dependency 'helpema', '~> 3.0', '>= 3.0.210706'
+  s.requirements << 'gnome-calculator: 40.1'
   s.requirements << 'espeak: eSpeak NG text-to-speech: 1.50  Data at: /usr/share/espeak-ng-data'
   s.requirements << 'system: linux/bash'
   s.requirements << 'ruby: ruby 3.0.1p64 (2021-04-05 revision 0fb782ee38) [x86_64-linux]'
