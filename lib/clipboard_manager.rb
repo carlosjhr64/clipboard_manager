@@ -16,14 +16,13 @@ class ClipboardManager
 
 
   def self.run
-    # Standard Library
-    require 'timeout'
 
-    # Work gems
+    # Gems
     require 'gtk3app'
     begin
       require 'helpema'
-      ::Helpema::ZBar # autoload
+      ::Helpema::ZBar   # autoload
+      require 'timeout' # needed to timeout zbarcam
     rescue
       # no ZBar? OK, nevermind.
       ClipboardManager.do_qrcode = false
@@ -39,11 +38,8 @@ class ClipboardManager
 end
 
 # Requires:
-#`ruby`
-#`gtk3app`
-#`zbarcam`
-#`firefox`
 #`espeak`
-#`wget`
-#`youtube-dl`
 #`system`
+#`ruby`
+#`xdg-open`
+#`zbarcam`
