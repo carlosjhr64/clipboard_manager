@@ -8,7 +8,9 @@ class ClipboardManager
     Options:
       -h --help
       -v --version
-      --minime    \t real minime
+      --minime      \t Real minime
+      --notoggle    \t Minime wont toggle decorated and keep above
+      --notdecorated\t Dont decorate window
   HELP
   VERSION = '4.0.210706'
 
