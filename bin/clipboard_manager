@@ -1,14 +1,17 @@
 #!/usr/bin/env ruby
-require 'help_parser'
 require 'clipboard_manager'
 
-OPTIONS = HelpParser[ClipboardManager::VERSION, <<HELP]
-Usage:
-  clipboard_manager [:options+]
-Options:
-  -h --help
-  -v --version
-HELP
+class ClipboardManager
+  begin
+    case ARGV
+    in [/^(-v)|(--version)$/]
+      puts VERSION
+    in [/^(-h)|(--help)$/]
+      puts HELP
+    else
+      ClipboardManager.run
+    end
+  end
+end
 
-ClipboardManager.requires
-Gtk3App.main ClipboardManager
+exit

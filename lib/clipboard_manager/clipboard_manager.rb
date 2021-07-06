@@ -1,53 +1,56 @@
-module ClipboardManager
-  using Rafini::Exception
-
-  def self.run(program)
-    ClipboardManager.new(program)
-  end
-
-class NoYes < Such::Dialog
-  def initialize(*par)
-    super
-    add_button '_No', Gtk::ResponseType::CANCEL
-    add_button '_Yes', Gtk::ResponseType::OK
-  end
-
-  def label(*par)
-    Such::Label.new child, *par
-  end
-
-  def ok?
-    show_all
-    response = run
-    destroy
-    response == Gtk::ResponseType::OK
-  end
+def Gtk3App.toggle!
+  @clipboard_manager_hook.do_toggle!
 end
 
-class CancelOk < Such::Dialog
-  def initialize(*par)
-    super
-    add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
-    add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
-  end
-
-  def combo(*par)
-    Such::ComboBoxText.new child, *par
-  end
-
-  def runs
-    show_all
-    response = run
-    yield if response == Gtk::ResponseType::OK
-    destroy
-  end
+def Gtk3App.clipboard_manager_hook(hook)
+  @clipboard_manager_hook = hook
 end
 
 class ClipboardManager
-  CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
+  using Rafini::Exception
 
-  def initialize(program)
-    @image = program.mini.children.first
+  class NoYes < Such::Dialog
+    def initialize(*par)
+      super
+      add_button '_No', Gtk::ResponseType::CANCEL
+      add_button '_Yes', Gtk::ResponseType::OK
+    end
+
+    def label(*par)
+      Such::Label.new child, *par
+    end
+
+    def ok?
+      show_all
+      response = run
+      destroy
+      response == Gtk::ResponseType::OK
+    end
+  end
+
+  class CancelOk < Such::Dialog
+    def initialize(*par)
+      super
+      add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+      add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    end
+
+    def combo(*par)
+      Such::ComboBoxText.new child, *par
+    end
+
+    def runs
+      show_all
+      response = run
+      yield if response == Gtk::ResponseType::OK
+      destroy
+    end
+  end
+
+  CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
+
+  def initialize(stage, toolbar, options)
+    @image = toolbar.parent.children[0].child # Expander:hbox:EventImage:Image
     @timer = nil
 
     @working = GdkPixbuf::Pixbuf.new(file: CONFIG[:Working])
@@ -58,9 +61,7 @@ class ClipboardManager
 
     @is_pwd  = Regexp.new(CONFIG[:IsPwd], Regexp::EXTENDED)
 
-    @window = program.window
-    vbox = Such::Box.new @window, :vbox!
-
+    vbox = Such::Box.new(stage, :vbox!)
     @running = Such::CheckButton.new(vbox, :running!, 'toggled'){toggled}
     @running.active = true
 
@@ -70,19 +71,12 @@ class ClipboardManager
     Such::Label.new vbox, :tasks!
 
     @checks = {}
-    CONFIG[:tasks].keys.each do |key|
+    CONFIG[:Tasks].keys.each do |key|
       @checks[key] = Such::CheckButton.new(vbox, [key.to_s.capitalize], {set_active: true})
     end
 
     Such::Button.new(vbox, :history_button!){do_history!}
     Such::Button.new(vbox, :qrcode_button!){do_qrcode!}
-
-    program.app_menu.each{|_|_.destroy if _.key==:fs!}
-
-    mm = program.mini_menu
-    mm.add_menu_item(:do_toggle!){do_toggle!}
-    mm.add_menu_item(:do_history!){do_history!}
-    mm.add_menu_item(:do_qrcode!){do_qrcode!}
 
     @history, @previous = [], nil
     text = request_text
@@ -95,14 +89,15 @@ class ClipboardManager
       true # repeat
     end
 
+    Gtk3App.clipboard_manager_hook(self)
+
     status(@ready)
-    @window.show_all
   end
 
   # https://github.com/ruby-gnome2/ruby-gnome2/blob/master/gtk3/sample/misc/dialog.rb
   def do_history!
     dialog = CancelOk.new(:history_dialog!)
-    dialog.transient_for = @window
+    Gtk3App.transient dialog
     combo = dialog.combo :history_combo!
     @history.each do |str|
       if str.length > CONFIG[:MaxString]
@@ -120,20 +115,19 @@ class ClipboardManager
   end
 
   def do_qrcode!
-    qrcode = Helpema::ZBar.cam(CONFIG[:QrcTimeOut])
-    if qrcode.nil?
-      CLIPBOARD.clear
-      status(@nope)
-    else
-      CLIPBOARD.text = qrcode
-      status(@ok)
-    end
+    qrcode = Timeout::timeout(CONFIG[:QrcTimeOut]){ Helpema::ZBar.cam() }
+    CLIPBOARD.text = qrcode
+    status(@ok)
+  rescue
+    $!.puts
+    CLIPBOARD.clear
+    status(@nope)
   end
 
   def question?(name)
     return true unless @ask.active?
     dialog = NoYes.new :question_dialog!
-    dialog.transient_for = @window
+    Gtk3App.transient dialog
     dialog.label.text = "Run #{name}?"
     dialog.ok?
   end
@@ -185,7 +179,7 @@ class ClipboardManager
 
   def manage(text)
     add_history text
-    CONFIG[:tasks].each do |name, _|
+    CONFIG[:Tasks].each do |name, _|
       next unless @checks[name].active?
       rgx, mth, clr, str = _
       rgx = Regexp.new(rgx, Regexp::EXTENDED | Regexp::MULTILINE)
@@ -195,8 +189,8 @@ class ClipboardManager
           case mth
           when :espeak
             espeak(text)
-          when :firefox
-            firefox(text)
+          when :open
+            open(text)
           when :bashit
             bashit(md, str)
           else
@@ -217,9 +211,8 @@ class ClipboardManager
     Rafini.thread_bang!{IO.popen(CONFIG[:Espeak], 'w'){|e|e.puts text.strip}}
   end
 
-  def firefox(text)
-    raise "quote not allowed in url" if text =~ /'/
-    Process.detach spawn "#{CONFIG[:Firefox]} '#{text}'"
+  def open(text)
+    Process.detach spawn CONFIG[:Open], text
   end
 
   def bashit(md, str)
@@ -229,6 +222,4 @@ class ClipboardManager
     $stderr.puts str
     Process.detach spawn str
   end
-
-end
 end
