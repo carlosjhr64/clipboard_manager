@@ -57,7 +57,7 @@ class ClipboardManager
     about_dialog: {
       set_program_name: 'Clipboard Manager',
       set_version: VERSION.semantic(0..1),
-      set_copyright: '(c) 2018 CarlosJHR64',
+      set_copyright: '(c) 2021 CarlosJHR64',
       set_comments: 'A Ruby Gtk3App Clipboard Manager ',
       set_website: 'https://github.com/carlosjhr64/clipboard_manager',
       set_website_label: 'See it at GitHub!',
