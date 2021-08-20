@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2021-08-21'
+  s.date     = '2021-08-20'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -40,7 +40,7 @@ lib/clipboard_manager/config.rb
   s.requirements << 'gnome-calculator: 40.1'
   s.requirements << 'espeak: eSpeak NG text-to-speech: 1.50  Data at: /usr/share/espeak-ng-data'
   s.requirements << 'system: linux/bash'
-  s.requirements << 'ruby: ruby 3.0.1p64 (2021-04-05 revision 0fb782ee38) [x86_64-linux]'
+  s.requirements << 'ruby: ruby 3.0.2p107 (2021-07-07 revision 0db68f0233) [x86_64-linux]'
   s.requirements << 'xdg-open: xdg-open 1.1.3+'
   s.requirements << 'zbarcam: 0.23'
 
