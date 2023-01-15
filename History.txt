@@ -23,3 +23,5 @@ dbf6b4929dfe084f788d9c4739d4dc57  pkg/clipboard_manager-1.1.1.gem
 dc3f4c734666d67ea5d1d2df8aae5197  pkg/clipboard_manager-3.0.0.gem
 # 4.0.210706 / 2021-07-06 16:29:54 -0700
 069ca1bb8d98dbd609e29960d6f9e201  pkg/clipboard_manager-4.0.210706.gem
+# 4.1.230115 / 2023-01-15 13:05:20 -0800
+593fea45acbe993998c7d2af1bc94d3f  pkg/clipboard_manager-4.1.230115.gem
