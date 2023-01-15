@@ -134,7 +134,7 @@ require_relative
 response
 ResponseType
 rgx
-Ruby30
+Ruby32
 run
 running
 RUNNING

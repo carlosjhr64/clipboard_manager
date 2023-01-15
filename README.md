@@ -1,6 +1,6 @@
 # ClipboardManager
 
-* [VERSION 4.0.210820](https://github.com/carlosjhr64/clipboard_manager/releases)
+* [VERSION 4.0.230115](https://github.com/carlosjhr64/clipboard_manager/releases)
 * [github](https://github.com/carlosjhr64/clipboard_manager)
 * [rubygems](https://rubygems.org/gems/clipboard_manager)
 
@@ -103,7 +103,7 @@ Options:
 
 (The MIT License)
 
-Copyright (c) 2021 CarlosJHR64
+Copyright (c) 2023 CarlosJHR64
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
