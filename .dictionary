@@ -27,7 +27,6 @@ espeak
 Espeak
 ESPEAK
 eval
-evaled
 EventImage
 Gdk
 GdkPixbuf
@@ -49,7 +48,6 @@ pwd
 IsPwd
 klass
 linux
-ll
 MaxHistory
 MaxString
 md
@@ -77,6 +75,7 @@ QrcTimeOut
 Rafini
 rb
 rbon
+RBON
 Regexp
 ResponseType
 rgx
@@ -96,7 +95,7 @@ usr
 vbox
 VBOX
 wiktionary
-www
+Wiktionary
 xdg
 XDG
 ZBar
