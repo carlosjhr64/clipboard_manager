@@ -227,6 +227,7 @@ class ClipboardManager
   end
 
   ESPEAK = IO.popen(CONFIG[:Espeak], 'w')
+  ESPEAK.puts # b/c :-???
   Gtk3App.finalize{ESPEAK.close}
   def espeak(text)
     Rafini.thread_bang!{ESPEAK.puts text.strip}
@@ -248,9 +249,10 @@ class ClipboardManager
     dialog = Message.new(:reply_dialog!)
     Gtk3App.transient dialog
     begin
-      dialog.label(:reply_label!).text = "#{text} #=> #{eval text}"
+      dialog.label(:reply_label!).text = text
+      dialog.label(:reply_label!).text = "#{eval text}"
     rescue
-      dialog.label.text = $!.message
+      dialog.label(:reply_label!).text = $!.message
     end
     dialog.runs
   end
