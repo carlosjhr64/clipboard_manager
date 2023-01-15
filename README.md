@@ -1,6 +1,6 @@
 # ClipboardManager
 
-* [VERSION 4.0.230115](https://github.com/carlosjhr64/clipboard_manager/releases)
+* [VERSION 4.1.230115](https://github.com/carlosjhr64/clipboard_manager/releases)
 * [github](https://github.com/carlosjhr64/clipboard_manager)
 * [rubygems](https://rubygems.org/gems/clipboard_manager)
 
