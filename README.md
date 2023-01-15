@@ -10,10 +10,8 @@ Ruby Gtk3App Clipboard Manager.
 
 ## FEATURES
 
-Clipboard auto sends to:
-
-* gnome-calculator
-* google dictionary
+* eval-calculator
+* Wiktionary
 * xdg-open url
 * espeak
 
@@ -23,8 +21,6 @@ Also:
 * QR-Code copy to clipboard
 
 ## INSTALL:
-
-Note that you'll need gtk3app:
 ```shell
 $ gem install clipboard_manager
 ```
@@ -40,15 +36,14 @@ At top of the file you will find the available tasks:
   Tasks!: {
     calculator: [
       "^([\\d\\.\\+\\-\\*\\/\\%\\(\\) ]{3,80})$",
-      :bashit,
-      true,
-      "gnome-calculator -e '$1'"
+      :reply,
+      true
     ],
     dictionary: [
       "^(\\w+)$",
       :bashit,
       true,
-      "xdg-open 'https://www.google.com/search?q=definition+of+$1'"
+      "xdg-open 'https://en.wiktionary.org/wiki/$1'"
     ],
     url: [
       "^https?://\\w[\\-\\+\\.\\w]*(\\.\\w+)(:\\d+)?(/\\S*)?$",
@@ -61,18 +56,17 @@ At top of the file you will find the available tasks:
       true
     ]
   },
-  #...
+  # ...
 }
 ```
 It is by this configuration that one can modify and add tasks.
-Warning: although the config file looks like `ruby` code,
-it is read like a config file(not evaled).
-Within tolerance(see [rbon](https://rubygems.org/gems/rbon)) you must maintain it's structure.
+Note that this is an [RBON](https://rubygems.org/gems/rbon) file.
+ClipboardManager has four tasks methods:
 
-ClipboardManager has three tasks methods: `:bashit`, `:open`, and `:espeak`.
-`:bashit` will take a command to be run by the system.
-`:open` will `xdg-open` the clip.
-`:espeak` will `espeak` the clip.
+* `:bashit` will take a command to be run by the system.
+* `:open` will `xdg-open` the clip.
+* `:espeak` will `espeak` the clip.
+* `:reply` will `eval` the clip and display a message with the result.
 
 With the boolean `true` value the clipboard will clear on the matched task.
 If you don't want the clipboard cleared on a matched task,
