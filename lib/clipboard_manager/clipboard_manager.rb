@@ -47,7 +47,7 @@ class ClipboardManager
     end
   end
 
-  CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
+  CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
   def initialize(stage, toolbar, options)
     @image = toolbar.parent.children[0].child # Expander:hbox:EventImage:Image
@@ -207,8 +207,10 @@ class ClipboardManager
     status(@nope)
   end
 
+  ESPEAK = IO.popen(CONFIG[:Espeak], 'w')
+  Gtk3App.finalize{ESPEAK.close}
   def espeak(text)
-    Rafini.thread_bang!{IO.popen(CONFIG[:Espeak], 'w'){|e|e.puts text.strip}}
+    Rafini.thread_bang!{ESPEAK.puts text.strip} #IO.popen(CONFIG[:Espeak], 'w'){|e|e.puts text.strip}}
   end
 
   def open(text)

@@ -41,7 +41,8 @@ class ClipboardManager
 
     IsPwd: is_pwd,
 
-    Espeak: 'espeak --stdin',
+    # The text-to-speech needs to be able to receive text from stdin
+    Espeak: 'espeak',
 
     Working: "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/working.png",
     Ok:      "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/ok.png",

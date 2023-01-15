@@ -24,6 +24,7 @@ downto
 env
 espeak
 Espeak
+ESPEAK
 evaled
 EventImage
 Gdk
