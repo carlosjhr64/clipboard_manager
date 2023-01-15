@@ -10,14 +10,14 @@ class ClipboardManager
   using Rafini::Exception
 
   class NoYes < Such::Dialog
-    def initialize(*par)
+    def initialize(key)
       super
       add_button '_No', Gtk::ResponseType::CANCEL
       add_button '_Yes', Gtk::ResponseType::OK
     end
 
-    def label(*par)
-      Such::Label.new child, *par
+    def label(key)
+      Such::Label.new child, key
     end
 
     def ok?
@@ -29,20 +29,37 @@ class ClipboardManager
   end
 
   class CancelOk < Such::Dialog
-    def initialize(*par)
+    def initialize(key)
       super
       add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
       add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
     end
 
-    def combo(*par)
-      Such::ComboBoxText.new child, *par
+    def combo(key)
+      Such::ComboBoxText.new child, key
     end
 
     def runs
       show_all
       response = run
       yield if response == Gtk::ResponseType::OK
+      destroy
+    end
+  end
+
+  class Message < Such::Dialog
+    def initialize(key)
+      super
+      add_button '_OK', Gtk::ResponseType::OK
+    end
+
+    def label(key)
+      Such::Label.new child, key
+    end
+
+    def runs
+      show_all
+      response = run
       destroy
     end
   end
@@ -128,7 +145,7 @@ class ClipboardManager
     return true unless @ask.active?
     dialog = NoYes.new :question_dialog!
     Gtk3App.transient dialog
-    dialog.label.text = "Run #{name}?"
+    dialog.label(:question_label!).text = "Run #{name}?"
     dialog.ok?
   end
 
@@ -193,6 +210,8 @@ class ClipboardManager
             open(text)
           when :bashit
             bashit(md, str)
+          when :reply
+            reply(text)
           else
             raise "Method #{mth} not implemented."
           end
@@ -210,7 +229,7 @@ class ClipboardManager
   ESPEAK = IO.popen(CONFIG[:Espeak], 'w')
   Gtk3App.finalize{ESPEAK.close}
   def espeak(text)
-    Rafini.thread_bang!{ESPEAK.puts text.strip} #IO.popen(CONFIG[:Espeak], 'w'){|e|e.puts text.strip}}
+    Rafini.thread_bang!{ESPEAK.puts text.strip}
   end
 
   def open(text)
@@ -223,5 +242,16 @@ class ClipboardManager
     end
     $stderr.puts str
     Process.detach spawn str
+  end
+
+  def reply(text)
+    dialog = Message.new(:reply_dialog!)
+    Gtk3App.transient dialog
+    begin
+      dialog.label(:reply_label!).text = "#{text} #=> #{eval text}"
+    rescue
+      dialog.label.text = $!.message
+    end
+    dialog.runs
   end
 end

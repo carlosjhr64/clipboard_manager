@@ -21,10 +21,12 @@ def
 Dont
 qrcode
 downto
+en
 env
 espeak
 Espeak
 ESPEAK
+eval
 evaled
 EventImage
 Gdk
@@ -93,6 +95,7 @@ UserSpace
 usr
 vbox
 VBOX
+wiktionary
 www
 xdg
 XDG

@@ -53,7 +53,7 @@ class TestConfig < Test::Unit::TestCase
       str, key, clr, cmd = v
       rgx = Regexp.new str, Regexp::EXTENDED # ensure we can at least do this
       # ensure proper key method
-      assert [:espeak,:open,:bashit].include?(key), "#{key} not a task method"
+      assert [:espeak,:open,:bashit,:reply].include?(key), "#{key} invalid task"
       #assert true
       # ensure that cmd makes sense
       if key==:bashit

@@ -51,6 +51,7 @@ Empty
 espeak
 Espeak
 ESPEAK
+eval
 Exception
 exit
 extend
@@ -93,6 +94,8 @@ match
 MaxHistory
 MaxString
 md
+message
+Message
 minime
 mth
 MULTILINE
@@ -110,7 +113,6 @@ OK
 open
 Open
 options
-par
 parent
 Pixbuf
 pop
@@ -124,11 +126,18 @@ QrcTimeOut
 question
 question_dialog
 QUESTION_DIALOG
+question_label
+QUESTION_LABEL
 quit
 Rafini
 raise
 Ready
 Regexp
+reply
+reply_dialog
+REPLY_DIALOG
+reply_label
+REPLY_LABEL
 request_text
 require
 require_relative

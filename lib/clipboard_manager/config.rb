@@ -18,15 +18,14 @@ class ClipboardManager
     Tasks!: { # Note that Ruby's Hash preserves order, and order here is important.
       calculator: [
         '^([\d\.\+\-\*\/\%\(\) ]{3,80})$',
-        :bashit,
+        :reply,
         true, # clears clipboard
-        "gnome-calculator -e '$1'",
       ],
       dictionary: [
         '^(\w+)$',
         :bashit,
         true, # clears clipboard
-        "xdg-open 'https://www.google.com/search?q=definition+of+$1'",
+        "xdg-open 'https://en.wiktionary.org/wiki/$1'",
       ],
       url: ['^https?://\w[\-\+\.\w]*(\.\w+)(:\d+)?(/\S*)?$', :open, true],
       espeak: ['.{80,}', :espeak, true],
@@ -90,9 +89,7 @@ class ClipboardManager
     history_button!: [:HISTORY_BUTTON, :history_button],
 
     HISTORY_DIALOG: a0,
-    history_dialog: {
-      set_window_position: :center,
-    },
+    history_dialog: h0,
     history_dialog!: [:HISTORY_DIALOG, :history_dialog],
 
     HISTORY_COMBO: a0,
@@ -105,10 +102,21 @@ class ClipboardManager
 
     QUESTION_DIALOG: a0,
     question_dialog: {
-      set_window_position: :center,
       set_keep_above: true,
     },
     question_dialog!: [:question_dialog, :QUESTION_DIALOG],
+
+    QUESTION_LABEL: a0,
+    question_label: h0,
+    question_label!: [:question_label, :QUESTION_LABEL],
+
+    REPLY_LABEL: a0,
+    reply_label: h0,
+    reply_label!: [:reply_label, :REPLY_LABEL],
+
+    REPLY_DIALOG: a0,
+    reply_dialog: h0,
+    reply_dialog!: [:reply_dialog, :REPLY_DIALOG],
 
     # Toggle's app-menu item.
     # Application MAY modify :TOGGLE for language.
