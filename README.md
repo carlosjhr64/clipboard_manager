@@ -82,7 +82,7 @@ The `:espeak` task will run when the clip is at least 80 characters long.
 It will have espeak read the text.
 
 ## HELP:
-```shell
+```console
 $ clipboard_manager --help
 Usage:
   clipboard_manager [:options+]

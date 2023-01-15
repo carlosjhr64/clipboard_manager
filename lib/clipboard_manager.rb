@@ -38,7 +38,6 @@ class ClipboardManager
 end
 
 # Requires:
-#`gnome-calculator`
 #`espeak`
 #`system`
 #`ruby`
