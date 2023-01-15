@@ -8,6 +8,10 @@
 
 Ruby Gtk3App Clipboard Manager.
 
+## SCREENSHOT:
+
+![screenshot](img/screenshot.png)
+
 ## FEATURES
 
 * eval-calculator
