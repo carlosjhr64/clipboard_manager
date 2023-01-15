@@ -1,6 +1,8 @@
 #! ruby
 require 'test/unit'
 require 'rafini'
+require 'such/convention'
+
 class UserSpace
   XDG = {}
   XDG['data'] = '~/.data' # Mock-up
@@ -13,6 +15,10 @@ end
 class TestConfig < Test::Unit::TestCase
   using Rafini::String
   CONFIG = ClipboardManager::CONFIG
+
+  def test_convention
+    assert_nil Such::Convention.validate(CONFIG)
+  end
 
   def test_config
     # Sanity checks
