@@ -1,6 +1,6 @@
 # ClipboardManager
 
-* [VERSION 4.1.230115](https://github.com/carlosjhr64/clipboard_manager/releases)
+* [VERSION 4.2.230117](https://github.com/carlosjhr64/clipboard_manager/releases)
 * [github](https://github.com/carlosjhr64/clipboard_manager)
 * [rubygems](https://rubygems.org/gems/clipboard_manager)
 
@@ -28,6 +28,12 @@ Also:
 ```shell
 $ gem install clipboard_manager
 ```
+## MOUSE CLICKS ON LOGO:
+
++ Button #1: Toggle Minime
++ Button #2: Toggle On/Off
++ Button #3: Pop-up Application Menu
+
 ## CONFIGURATION:
 
 After an initial run, your user configuration will found in:
@@ -55,7 +61,7 @@ At top of the file you will find the available tasks:
       true
     ],
     espeak: [
-      ".{80,}",
+      ".{40,}",
       :espeak,
       true
     ]

@@ -12,7 +12,7 @@ class ClipboardManager
       --notoggle    \t Minime wont toggle decorated and keep above
       --notdecorated\t Dont decorate window
   HELP
-  VERSION = '4.1.230115'
+  VERSION = '4.2.230117'
 
 
   def self.run

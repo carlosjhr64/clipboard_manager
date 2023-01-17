@@ -107,6 +107,15 @@ class ClipboardManager
     end
 
     Gtk3App.clipboard_manager_hook(self)
+    Gtk3App.logo_press_event do |button|
+      case button
+      when 1
+        Gtk3App.minime!
+      when 2
+        Gtk3App.toggle!
+      # When 3 gets captured by Gtk3App's main menu
+      end
+    end
 
     status(@ready)
   end
@@ -157,6 +166,7 @@ class ClipboardManager
     text = request_text
     @previous = text
     @running.active = !@running.active?
+    ClipboardManager.kill_espeak unless @running.active?
   end
 
   def request_text
@@ -226,11 +236,16 @@ class ClipboardManager
     status(@nope)
   end
 
-  ESPEAK = IO.popen(CONFIG[:Espeak], 'w')
-  ESPEAK.puts # b/c :-???
-  Gtk3App.finalize{ESPEAK.close}
+  def ClipboardManager.kill_espeak
+    espeak = CONFIG[:Espeak].split.first
+    system "killall --quiet #{espeak}"
+  end
+  Gtk3App.finalize{ClipboardManager.kill_espeak}
   def espeak(text)
-    Rafini.thread_bang!{ESPEAK.puts text.strip}
+    Rafini.thread_bang! do
+      ClipboardManager.kill_espeak
+      IO.popen(CONFIG[:Espeak], 'w'){_1.puts text.strip}
+    end
   end
 
   def open(text)

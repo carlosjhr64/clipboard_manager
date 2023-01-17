@@ -28,7 +28,7 @@ class ClipboardManager
         "xdg-open 'https://en.wiktionary.org/wiki/$1'",
       ],
       url: ['^https?://\w[\-\+\.\w]*(\.\w+)(:\d+)?(/\S*)?$', :open, true],
-      espeak: ['.{80,}', :espeak, true],
+      espeak: ['.{40,}', :espeak, true],
     },
 
     StatusTimeOut: 3,
@@ -41,7 +41,7 @@ class ClipboardManager
     IsPwd: is_pwd,
 
     # The text-to-speech needs to be able to receive text from stdin
-    Espeak: 'espeak',
+    Espeak: 'espeak -s 180 --stdin',
 
     Working: "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/working.png",
     Ok:      "#{UserSpace::XDG['data']}/gtk3app/clipboardmanager/ok.png",
@@ -120,7 +120,7 @@ class ClipboardManager
 
     # Toggle's app-menu item.
     # Application MAY modify :TOGGLE for language.
-    TOGGLE: [label: 'Toggle'],
+    TOGGLE: [label: 'Toggle On/Off'],
     toggle: h0,
     toggle!: [:TOGGLE, :toggle, 'activate'],
     app_menu: {
